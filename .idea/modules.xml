@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GalambO.iml" filepath="$PROJECT_DIR$/GalambO.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hu.nik.uniobuda.GalambO2.iml" filepath="$PROJECT_DIR$/hu.nik.uniobuda.GalambO2.iml" />
     </modules>
   </component>
 </project>
