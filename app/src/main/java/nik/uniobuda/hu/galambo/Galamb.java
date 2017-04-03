@@ -12,8 +12,8 @@ public class Galamb
 {
     int teljesSzint;
 
-    double egészség;
-    double fittség;
+    double egeszseg;
+    double fittseg;
     double jollakottsag;
     double kedelyallapot;
     double intelligencia;
@@ -38,20 +38,20 @@ public class Galamb
         this.teljesSzint = teljesSzint;
     }
 
-    public double getEgészség() {
-        return egészség;
+    public double getEgeszseg() {
+        return egeszseg;
     }
 
-    public void setEgészség(double egészség) {
-        this.egészség = egészség;
+    public void setEgeszseg(double egeszseg) {
+        this.egeszseg = egeszseg;
     }
 
-    public double getFittség() {
-        return fittség;
+    public double getFittseg() {
+        return fittseg;
     }
 
-    public void setFittség(double fittség) {
-        this.fittség = fittség;
+    public void setFittseg(double fittseg) {
+        this.fittseg = fittseg;
     }
 
     public double getJollakottsag() {
@@ -97,8 +97,8 @@ public class Galamb
     public Galamb() {
         this.teljesSzint = 1;
 
-        this.egészség=0;
-        this.fittség=0;
+        this.egeszseg=0;
+        this.fittseg=0;
         this.intelligencia=0;
         this.jollakottsag = 0;
         this.kedelyallapot=0;
