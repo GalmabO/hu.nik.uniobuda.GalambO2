@@ -1,10 +1,15 @@
 package nik.uniobuda.hu.galambo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +17,61 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Galamb galamb;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if(galamb == null)
-            galamb = new Galamb();
+        {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Galamb létrehozás");
+                alert.setMessage("Add meg a galambod nevét!");
 
-        Feltolt();
 
+                final EditText edittext = new EditText(this);
+
+                alert.setView(edittext);
+
+                alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String input = edittext.getText().toString();
+                        if (!input.equals("")) {
+                            galamb = new Galamb(input);
+                            TextView text = (TextView) findViewById(R.id.aa) ;
+                            text.setText(galamb.getNev());
+                            Toast.makeText(MainActivity.this, "Fasza!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                alert.show();
+
+
+
+
+            //String input = edittext.getText().toString();
+/*
+            if (!input.equals("")) {
+                galamb = new Galamb(input);
+                Toast.makeText(MainActivity.this, "Fasza!", Toast.LENGTH_LONG).show();
+            }*/
+        }
+
+        else
+        {
+            Feltolt();
+
+
+        }
         Button button = (Button) findViewById(R.id.gomb);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 galamb.setJollakottsag(10);
+
             }
         });
 
@@ -37,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 Feltolt();
             }
         });
+
 
     }
 

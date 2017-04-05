@@ -10,7 +10,9 @@ import java.util.Hashtable;
 
 public class Galamb
 {
-    int teljesSzint;
+    private int teljesSzint;
+
+    private String nev;
 
     private double egeszseg;
     private double fittseg;
@@ -18,10 +20,6 @@ public class Galamb
     private double kedelyallapot;
     private double intelligencia;
     private double kipihentseg;
-
-    public Dictionary getKajamennyiseg() {
-        return kajamennyiseg;
-    }
 
     public static final int ENNYIPROPERTYVAN = 6;
 
@@ -32,12 +30,20 @@ public class Galamb
 
     private boolean VanETojas;
 
+    public String getNev() {
+        return nev;
+    }
+
     public int getTeljesSzint() {
         return teljesSzint;
     }
 
     public void setTeljesSzint(int teljesSzint) {
         this.teljesSzint += teljesSzint;
+    }
+
+    public Dictionary getKajamennyiseg() {
+        return kajamennyiseg;
     }
 
     public double getEgeszseg() {
@@ -96,8 +102,10 @@ public class Galamb
         this.penz += penz;
     }
 
-    public Galamb() {
+    public Galamb(String nev) {
         this.teljesSzint = 1;
+
+        this.nev = nev;
 
         this.egeszseg=0;
         this.fittseg=0;
