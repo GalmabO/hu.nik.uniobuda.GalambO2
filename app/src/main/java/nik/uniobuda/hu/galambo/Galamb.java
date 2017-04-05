@@ -12,30 +12,32 @@ public class Galamb
 {
     int teljesSzint;
 
-    double egeszseg;
-    double fittseg;
-    double jollakottsag;
-    double kedelyallapot;
-    double intelligencia;
-    double kipihentseg;
+    private double egeszseg;
+    private double fittseg;
+    private double jollakottsag;
+    private double kedelyallapot;
+    private double intelligencia;
+    private double kipihentseg;
 
     public Dictionary getKajamennyiseg() {
         return kajamennyiseg;
     }
 
+    public static final int ENNYIPROPERTYVAN = 6;
+
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, hogy az adott kajából mennyi van éppen megvásárolva.
     Dictionary kajamennyiseg;
 
-    int penz;
+    private int penz;
 
-    boolean VanETojas;
+    private boolean VanETojas;
 
     public int getTeljesSzint() {
         return teljesSzint;
     }
 
     public void setTeljesSzint(int teljesSzint) {
-        this.teljesSzint = teljesSzint;
+        this.teljesSzint += teljesSzint;
     }
 
     public double getEgeszseg() {
@@ -43,7 +45,7 @@ public class Galamb
     }
 
     public void setEgeszseg(double egeszseg) {
-        this.egeszseg = egeszseg;
+        this.egeszseg += egeszseg;
     }
 
     public double getFittseg() {
@@ -51,7 +53,7 @@ public class Galamb
     }
 
     public void setFittseg(double fittseg) {
-        this.fittseg = fittseg;
+        this.fittseg += fittseg;
     }
 
     public double getJollakottsag() {
@@ -59,7 +61,7 @@ public class Galamb
     }
 
     public void setJollakottsag(double jollakottsag) {
-        this.jollakottsag = jollakottsag;
+        this.jollakottsag += jollakottsag;
     }
 
     public double getKedelyallapot() {
@@ -67,7 +69,7 @@ public class Galamb
     }
 
     public void setKedelyallapot(double kedelyallapot) {
-        this.kedelyallapot = kedelyallapot;
+        this.kedelyallapot += kedelyallapot;
     }
 
     public double getIntelligencia() {
@@ -75,7 +77,7 @@ public class Galamb
     }
 
     public void setIntelligencia(double intelligencia) {
-        this.intelligencia = intelligencia;
+        this.intelligencia += intelligencia;
     }
 
     public double getKipihentseg() {
@@ -83,7 +85,7 @@ public class Galamb
     }
 
     public void setKipihentseg(double kipihentseg) {
-        this.kipihentseg = kipihentseg;
+        this.kipihentseg += kipihentseg;
     }
 
     public int getPenz() {
@@ -91,7 +93,7 @@ public class Galamb
     }
 
     public void setPenz(int penz) {
-        this.penz = penz;
+        this.penz += penz;
     }
 
     public Galamb() {
