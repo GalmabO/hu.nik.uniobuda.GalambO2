@@ -16,11 +16,10 @@ public abstract class Store
 
     static {
         Dictionary seged = new Hashtable();
-        seged.put("Bread",10);
-        seged. put("Coffee",8);
-        seged.put("ChickenNugget",20);
-        seged.put("Corn",15);
-
+        seged.put("Kenyér",10);
+        seged. put("Kávé",8);
+        seged.put("Csirkemell",20);
+        seged.put("Kukorica",15);
         seged.put("valami",0);
         cikkek =seged;
     }

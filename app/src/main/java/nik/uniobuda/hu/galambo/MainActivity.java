@@ -2,6 +2,7 @@ package nik.uniobuda.hu.galambo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         {
             Feltolt();
 
-
         }
         Button button = (Button) findViewById(R.id.gomb);
         button.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +83,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button boltgomb = (Button) findViewById(R.id.bolt);
+        boltgomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoltActivityMegnyitas();
+            }
+        });
+
+
+    }
+
+    void BoltActivityMegnyitas()
+    {
+        Intent intent = new Intent(MainActivity.this,StoreActivity.class);
+        intent.putExtra("penz",galamb.getPenz());
+        startActivity(intent);
 
     }
 
