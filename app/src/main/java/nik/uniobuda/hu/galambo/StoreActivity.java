@@ -27,6 +27,7 @@ public class StoreActivity extends AppCompatActivity {
     private static Galamb galamb;
     private GridView grid;
     private KajaAdapter adapter;
+    private static TextView jatekospenzview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class StoreActivity extends AppCompatActivity {
 
 
 
-        TextView jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
+        jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
         jatekospenzview.setText(String.valueOf(galamb.getPenz()));
 
     }
@@ -68,6 +69,8 @@ public class StoreActivity extends AppCompatActivity {
                 {
                     galamb.KajaVasarlas(melyiketvalasztotta);
                     galamb.setPenz(-valasztott.getAr());
+
+                    jatekospenzview.setText(String.valueOf(galamb.getPenz()));
                     return true;
                 }
             }
@@ -82,51 +85,19 @@ public class StoreActivity extends AppCompatActivity {
         grid = (GridView) findViewById(R.id.araslista);
         grid.setAdapter(adapter);
 
-        /*
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Food valasztott = (Food)adapter.getItem(position);
-
-                TextView jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
-                jatekospenzview.setText(valasztott.getNev());
-
-            }
-        });*/
     }
 
-    private void Visszaadas()
-    {
-        /*
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", (Parcelable) galamb);
-        setResult(Activity.RESULT_OK,returnIntent);
-        finish();*/
 
-        Intent intent = new Intent();
-        intent.putExtra("result", (Parcelable) galamb);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    /*
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        Intent intent = new Intent();
-        intent.putExtra("result", (Parcelable) galamb);
-        setResult(RESULT_OK, intent);
-        finish();
-    }*/
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onPause() {
 
         Intent intent = new Intent();
         intent.putExtra("result", (Parcelable) galamb);
         this.setResult(RESULT_OK, intent);
         finish();
+
+        super.onPause();
+
     }
 }

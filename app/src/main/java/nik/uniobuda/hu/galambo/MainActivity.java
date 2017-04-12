@@ -114,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
                 galamb = (Galamb)data.getParcelableExtra("result");
+                Mentes();
             }
         }
     }
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             FileInputStream fis = openFileInput(FILENAME);
             ObjectInputStream is = new ObjectInputStream(fis);
             Galamb teszt = (Galamb) is.readObject();
-            if(!teszt.getNev().equals(""))
+            if(teszt!= null && !teszt.getNev().equals(""))
                 galamb=teszt;
             is.close();
             fis.close();
