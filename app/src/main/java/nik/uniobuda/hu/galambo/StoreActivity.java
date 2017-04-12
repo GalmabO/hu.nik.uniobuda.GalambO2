@@ -1,6 +1,10 @@
 package nik.uniobuda.hu.galambo;
 
+import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -18,8 +23,10 @@ import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
 
-    private final List<Food> foods = Store.getCikkek();
-    private int jatekospenze;
+    private static final List<Food> foods = Store.getCikkek();
+    private static Galamb galamb;
+    private GridView grid;
+    private KajaAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,27 +37,96 @@ public class StoreActivity extends AppCompatActivity {
 
         Feltolt();
 
+        galamb = (Galamb)getIntent().getExtras().get("galamb");
 
-        jatekospenze = getIntent().getExtras().getInt("penz");
+
+
         TextView jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
-        Object seged = jatekospenze;
-        jatekospenzview.setText(seged.toString());
+        jatekospenzview.setText(String.valueOf(galamb.getPenz()));
 
     }
 
-    public boolean Vásárlás(Food melyiketvalasztotta)
+
+    public static boolean Vasarlas(String melyiketvalasztotta)
     {
-        if(jatekospenze >= melyiketvalasztotta.getAr())
-            return true;
-        else
-            return false;
+        Food valasztott = null;
+        
+        if(melyiketvalasztotta!=null)
+        {
+            for (Food food: foods) {
+                if(food.getNev().equals(melyiketvalasztotta))
+                {
+                    valasztott = food;
+                    break;
+                }
+
+            }
+
+            if(valasztott != null)
+            {
+                if(galamb.getPenz() >= valasztott.getAr())
+                {
+                    galamb.KajaVasarlas(melyiketvalasztotta);
+                    galamb.setPenz(-valasztott.getAr());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
     private void Feltolt()
     {
-        KajaAdapter adapter = new KajaAdapter(foods);
-        GridView lista = (GridView) findViewById(R.id.araslista);
-        lista.setAdapter(adapter);
+        adapter = new KajaAdapter(foods);
+        grid = (GridView) findViewById(R.id.araslista);
+        grid.setAdapter(adapter);
+
+        /*
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Food valasztott = (Food)adapter.getItem(position);
+
+                TextView jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
+                jatekospenzview.setText(valasztott.getNev());
+
+            }
+        });*/
+    }
+
+    private void Visszaadas()
+    {
+        /*
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", (Parcelable) galamb);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();*/
+
+        Intent intent = new Intent();
+        intent.putExtra("result", (Parcelable) galamb);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    /*
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Intent intent = new Intent();
+        intent.putExtra("result", (Parcelable) galamb);
+        setResult(RESULT_OK, intent);
+        finish();
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent();
+        intent.putExtra("result", (Parcelable) galamb);
+        this.setResult(RESULT_OK, intent);
+        finish();
     }
 }

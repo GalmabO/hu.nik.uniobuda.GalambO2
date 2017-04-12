@@ -1,5 +1,8 @@
 package nik.uniobuda.hu.galambo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -7,7 +10,7 @@ import java.util.*;
  * Created by Adam on 2017. 04. 03..
  */
 
-public class Galamb implements Serializable
+public class Galamb implements Serializable, Parcelable
 {
     private int teljesSzint;
 
@@ -23,11 +26,59 @@ public class Galamb implements Serializable
     public static final int ENNYIPROPERTYVAN = 6;
 
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
-    Dictionary kajamennyiseg;
+    private Dictionary kajamennyiseg;
 
     private int penz;
 
     private boolean VanETojas;
+
+    protected Galamb(Parcel in) {
+        teljesSzint = in.readInt();
+        nev = in.readString();
+        egeszseg = in.readDouble();
+        fittseg = in.readDouble();
+        jollakottsag = in.readDouble();
+        kedelyallapot = in.readDouble();
+        intelligencia = in.readDouble();
+        kipihentseg = in.readDouble();
+        penz = in.readInt();
+        VanETojas = in.readByte() != 0;
+
+        KajamennyisegIni();
+    }
+
+    public Galamb(String nev) {
+
+        this.teljesSzint = 1;
+
+        this.nev = nev;
+
+        this.egeszseg=0;
+        this.fittseg=0;
+        this.intelligencia=0;
+        this.jollakottsag = 0;
+        this.kedelyallapot=0;
+        this.kipihentseg =0;
+
+        penz = 0;
+
+        VanETojas = false;
+
+        KajamennyisegIni();
+
+    }
+
+    public static final Creator<Galamb> CREATOR = new Creator<Galamb>() {
+        @Override
+        public Galamb createFromParcel(Parcel in) {
+            return new Galamb(in);
+        }
+
+        @Override
+        public Galamb[] newArray(int size) {
+            return new Galamb[size];
+        }
+    };
 
     public String getNev() {
         return nev;
@@ -101,22 +152,10 @@ public class Galamb implements Serializable
         this.penz += penz;
     }
 
-    public Galamb(String nev) {
-        this.teljesSzint = 1;
 
-        this.nev = nev;
 
-        this.egeszseg=0;
-        this.fittseg=0;
-        this.intelligencia=0;
-        this.jollakottsag = 0;
-        this.kedelyallapot=0;
-        this.kipihentseg =0;
-
-        penz = 0;
-
-        VanETojas = false;
-
+    private void KajamennyisegIni()
+    {
         kajamennyiseg = new Hashtable();
         List<Food> seged = Store.getCikkek();
         for (int i = 0; i < seged.size(); i++) {
@@ -189,7 +228,6 @@ public class Galamb implements Serializable
         jollakottsag-=time;
     }
 
-
     public void Eves(int valasztottkajataplalekmennyisege)
     {
         kipihentseg -= 0.2;
@@ -197,7 +235,7 @@ public class Galamb implements Serializable
         jollakottsag+=valasztottkajataplalekmennyisege;
     }
 
-    public boolean TojasRakas()
+    public boolean TojasRakas() //egyszerre csak egy tojás lehet lerakva
     {
         if(!VanETojas)
         {
@@ -207,5 +245,27 @@ public class Galamb implements Serializable
         return false;
     }
 
+    public void KajaVasarlas(String nev)
+    {
+        kajamennyiseg.put(nev,(int)kajamennyiseg.get(nev)+1);
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(teljesSzint);
+        dest.writeString(nev);
+        dest.writeDouble(egeszseg);
+        dest.writeDouble(fittseg);
+        dest.writeDouble(jollakottsag);
+        dest.writeDouble(kedelyallapot);
+        dest.writeDouble(intelligencia);
+        dest.writeDouble(kipihentseg);
+        dest.writeInt(penz);
+        dest.writeByte((byte) (VanETojas ? 1 : 0));
+    }
 }

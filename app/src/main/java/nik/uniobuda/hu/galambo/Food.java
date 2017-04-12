@@ -5,9 +5,9 @@ package nik.uniobuda.hu.galambo;
  */
 
 public class Food {
-    String nev;
-    int tapanyagmennyiseg;
-    int ar;
+    private String nev;
+    private int tapanyagmennyiseg;
+    private int ar;
 
     public String getNev() {
         return nev;

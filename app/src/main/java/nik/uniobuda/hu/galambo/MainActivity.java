@@ -1,9 +1,11 @@
 package nik.uniobuda.hu.galambo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ExpandedMenuView;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             galamb = new Galamb(input);
                             TextView text = (TextView) findViewById(R.id.aa) ;
                             text.setText(galamb.getNev());
-                            Toast.makeText(MainActivity.this, "Fasza!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Sikeres létrehozás!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -71,17 +73,15 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             Feltolt();
-
         }
-        TextView nev = (TextView) findViewById(R.id.aa);
-        nev.setText(galamb.getNev());
+
 
         Button button = (Button) findViewById(R.id.gomb);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 galamb.setJollakottsag(10);
-
+                galamb.setPenz(100);
             }
         });
 
@@ -107,13 +107,26 @@ public class MainActivity extends AppCompatActivity {
     void BoltActivityMegnyitas()
     {
         Intent intent = new Intent(MainActivity.this,StoreActivity.class);
-        intent.putExtra("penz",galamb.getPenz());
-        startActivity(intent);
+        intent.putExtra("galamb", (Parcelable) galamb);
+        this.startActivityForResult(intent, 1);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                galamb = (Galamb)data.getParcelableExtra("result");
+            }
+        }
     }
 
     private void Feltolt()
     {
+        TextView nev = (TextView) findViewById(R.id.aa);
+        nev.setText(galamb.getNev());
+
         List<Object[]> items = new ArrayList<>();
         items.add(new Object[]{galamb.getEgeszseg(),"Egészség"});
         items.add(new Object[]{galamb.getKedelyallapot(),"Kedélyállapot"});
@@ -143,38 +156,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-/*
-        try {
-            File file = new File(FILENAME);
-            if (!file.exists()) {
-                if (!file.createNewFile()) {
-                    throw new IOException("Unable to create file");
-                }
-
-                FileOutputStream fileout = new FileOutputStream(file);
-                ObjectOutputStream out = new ObjectOutputStream(fileout);
-                out.writeObject(galamb);
-            }
-        }
-        catch (Exception e){}
-*/
-
-        /*
-        FileOutputStream   fos  = null;
-        ObjectOutputStream oos  = null;
-        try {
-            fos = new FileOutputStream(FILENAME);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(galamb);
-        } catch (Exception e) {
-        } finally {
-            try {
-                if (oos != null)   oos.close();
-                if (fos != null)   fos.close();
-            } catch (Exception e) { }
-        }
-        */
     }
 
     private void Betoltes()
@@ -194,25 +175,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        /*
-        FileInputStream fis = null;
-        ObjectInputStream is = null;
-
-        try {
-            fis = new FileInputStream(FILENAME);
-            is = new ObjectInputStream(fis);
-            galamb = (Galamb) is.readObject();
-        } catch(Exception e) {
-            String val= e.getMessage();
-        } finally {
-            try {
-                if (fis != null)   fis.close();
-                if (is != null)   is.close();
-            } catch (Exception e) { }
-        }
-        */
     }
 
     @Override
@@ -222,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override //TODO állapotokat vissza kell majd tölteni
+    @Override
     protected void onResume() {
         super.onResume();
         Betoltes();

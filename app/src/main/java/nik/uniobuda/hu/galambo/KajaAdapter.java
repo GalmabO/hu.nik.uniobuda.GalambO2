@@ -56,6 +56,14 @@ public class KajaAdapter extends BaseAdapter {
         vetelgomb.setText("Vásárlás");
         vetelgomb.setTag(items.get(position).getNev());
 
+        vetelgomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String a = (String )v.getTag();
+                StoreActivity.Vasarlas(a);
+            }
+        });
+
         return listItemView;
     }
 }
