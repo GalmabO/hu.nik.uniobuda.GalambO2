@@ -4,21 +4,47 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/nev"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_toLeftOf="@+id/ar"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:background="#54c0ff"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tapanyagmennyiseg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_below="@id/nev"
+        android:background="#54c0ff"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/ar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tapanyagmennyiseg"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="#54c0ff"
+        android:textAlignment="center"/>
+
+    <android.support.v7.widget.AppCompatButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/nev"
+        android:id="@+id/vetel"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ar"
+        />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/uressav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vetel"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"/>
-
-
 </RelativeLayout>

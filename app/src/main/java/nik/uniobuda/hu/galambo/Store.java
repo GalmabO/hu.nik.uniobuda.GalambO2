@@ -1,9 +1,13 @@
 package nik.uniobuda.hu.galambo;
 
 
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Created by Adam on 2017. 04. 03..
@@ -12,19 +16,17 @@ import java.util.Hashtable;
 public abstract class Store
 {
     //a key a kaja neve, a value az adott kaja ára
-    private static Dictionary cikkek = new Hashtable();
+    private static List<Food> cikkek = new ArrayList<>();
 
     static {
-        Dictionary seged = new Hashtable();
-        seged.put("Kenyér",10);
-        seged. put("Kávé",8);
-        seged.put("Csirkemell",20);
-        seged.put("Kukorica",15);
-        seged.put("valami",0);
-        cikkek =seged;
+        cikkek.add(new Food("Kenyér",1,10));
+        cikkek.add(new Food("Kávé",1,8));
+        cikkek.add(new Food("Csirkemell",5,20));
+        cikkek.add(new Food("Kukorica",3,15));
+        cikkek.add(new Food("valami",0,0));
     }
 
-    public static Dictionary getCikkek() {
+    public static List<Food> getCikkek() {
         return cikkek;
     }
 

@@ -3,6 +3,7 @@ package nik.uniobuda.hu.galambo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.List;
 public class KajaAdapter extends BaseAdapter {
 
     //Első a név, második az ár
-    private List<Object[]> items;
+    private List<Food> items;
 
-    public KajaAdapter(List<Object[]> items) { this.items = items; }
+    public KajaAdapter(List<Food> items) { this.items = items; }
 
     @Override
     public int getCount()  {
@@ -36,13 +37,24 @@ public class KajaAdapter extends BaseAdapter {
         View listItemView = convertView;
         if(listItemView == null)
             listItemView= View.inflate(parent.getContext(), R.layout.listitem_food,null);
+
         TextView nevTextView = (TextView) listItemView.findViewById(R.id.nev);
+        TextView tapa = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
         TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
 
-        //első érték a value, második a property neve
-        Object [] tul = items.get(position);
-        nevTextView.setText(tul[0].toString());
-        arTextView.setText(tul[1].toString());
+        TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
+        Button vetelgomb = (Button) listItemView.findViewById(R.id.vetel);
+
+
+        Food food = items.get(position);
+
+        nevTextView.setText("Étel neve: "+ food.getNev());
+        tapa.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
+        arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
+
+        ures.setText(" ");
+        vetelgomb.setText("Vásárlás");
+        //vetelgomb.setTag(items.get(position).getNev());
 
         return listItemView;
     }

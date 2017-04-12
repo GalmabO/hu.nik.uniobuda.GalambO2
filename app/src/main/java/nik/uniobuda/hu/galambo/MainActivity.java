@@ -6,24 +6,37 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Galamb galamb;
+    private Galamb galamb;
+    private final String FILENAME = "GalambPeldany";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        Betoltes();
 
         if(galamb == null)
         {
@@ -36,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                 alert.setView(edittext);
 
-                alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("Létrehozás", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String input = edittext.getText().toString();
@@ -117,13 +130,55 @@ public class MainActivity extends AppCompatActivity {
         lista.setAdapter(adapter);
     }
 
-    @Override //TODO állapotokat le kell majd itt menteni
+    private void Mentes()
+    {
+
+        FileOutputStream   fos  = null;
+        ObjectOutputStream oos  = null;
+        try {
+            fos = new FileOutputStream(FILENAME);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(galamb);
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (oos != null)   oos.close();
+                if (fos != null)   fos.close();
+            } catch (Exception e) { }
+        }
+    }
+
+    private void Betoltes()
+    {
+
+        FileInputStream fis = null;
+        ObjectInputStream is = null;
+
+        try {
+            fis = new FileInputStream(FILENAME);
+            is = new ObjectInputStream(fis);
+            galamb = (Galamb) is.readObject();
+        } catch(Exception e) {
+            String val= e.getMessage();
+        } finally {
+            try {
+                if (fis != null)   fis.close();
+                if (is != null)   is.close();
+            } catch (Exception e) { }
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        Mentes();
     }
+
 
     @Override //TODO állapotokat vissza kell majd tölteni
     protected void onResume() {
         super.onResume();
+
+
     }
 }

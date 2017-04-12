@@ -7,9 +7,20 @@
     tools:context="nik.uniobuda.hu.galambo.StoreActivity">
 
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/jatekospenze"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:background="#afaf37"/>
+
     <GridView
         android:id="@+id/araslista"
         android:numColumns="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/jatekospenze"/>
+
 </RelativeLayout>
