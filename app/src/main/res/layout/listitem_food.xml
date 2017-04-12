@@ -31,19 +31,12 @@
         android:background="#54c0ff"
         android:textAlignment="center"/>
 
-    <android.support.v7.widget.AppCompatButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vetel"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/ar"
-        />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/uressav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vetel"
+        android:layout_below="@id/ar"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"/>

@@ -23,11 +23,11 @@ import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
 
-    private static final List<Food> foods = Store.getCikkek();
-    private static Galamb galamb;
+    private final List<Food> foods = Store.getCikkek();
+    private Galamb galamb;
     private GridView grid;
     private KajaAdapter adapter;
-    private static TextView jatekospenzview;
+    private TextView jatekospenzview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class StoreActivity extends AppCompatActivity {
     }
 
 
-    public static boolean Vasarlas(String melyiketvalasztotta)
+    public boolean Vasarlas(String melyiketvalasztotta)
     {
         Food valasztott = null;
         
@@ -69,7 +69,7 @@ public class StoreActivity extends AppCompatActivity {
                 {
                     galamb.KajaVasarlas(melyiketvalasztotta);
                     galamb.setPenz(-valasztott.getAr());
-
+                    Toast.makeText(this,"sikeres vásárlás",Toast.LENGTH_LONG).show();
                     jatekospenzview.setText(String.valueOf(galamb.getPenz()));
                     return true;
                 }
@@ -85,8 +85,14 @@ public class StoreActivity extends AppCompatActivity {
         grid = (GridView) findViewById(R.id.araslista);
         grid.setAdapter(adapter);
 
+        grid.setClickable(true);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Vasarlas(foods.get(position).getNev());
+            }
+        });
     }
-
 
 
     @Override
@@ -98,6 +104,18 @@ public class StoreActivity extends AppCompatActivity {
         finish();
 
         super.onPause();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent();
+        intent.putExtra("result", (Parcelable) galamb);
+        this.setResult(RESULT_OK, intent);
+        finish();
+
+        super.onBackPressed();
 
     }
 }

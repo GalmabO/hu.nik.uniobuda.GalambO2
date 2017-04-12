@@ -43,7 +43,7 @@ public class KajaAdapter extends BaseAdapter {
         TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
 
         TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
-        Button vetelgomb = (Button) listItemView.findViewById(R.id.vetel);
+        //Button vetelgomb = (Button) listItemView.findViewById(R.id.vetel);
 
 
         Food food = items.get(position);
@@ -53,9 +53,10 @@ public class KajaAdapter extends BaseAdapter {
         arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
 
         ures.setText(" ");
-        vetelgomb.setText("Vásárlás");
-        vetelgomb.setTag(items.get(position).getNev());
+        //vetelgomb.setText("Vásárlás");
+        //vetelgomb.setTag(items.get(position).getNev());
 
+        /*
         vetelgomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +64,7 @@ public class KajaAdapter extends BaseAdapter {
                 StoreActivity.Vasarlas(a);
             }
         });
-
+        */
         return listItemView;
     }
 }
