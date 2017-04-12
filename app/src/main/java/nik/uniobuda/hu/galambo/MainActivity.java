@@ -33,7 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Galamb galamb;
     private final String FILENAME = "GalambPeldany";
+    private static Context mContext;
 
+    public static Context getContext()
+    {
+        return mContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        mContext = this;
         Betoltes();
 
         if(galamb == null)

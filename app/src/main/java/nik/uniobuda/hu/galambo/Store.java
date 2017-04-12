@@ -1,6 +1,9 @@
 package nik.uniobuda.hu.galambo;
 
 
+import android.app.Application;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
@@ -19,11 +22,11 @@ public abstract class Store
     private static List<Food> cikkek = new ArrayList<>();
 
     static {
-        cikkek.add(new Food("Kenyér",1,10));
-        cikkek.add(new Food("Kávé",1,8));
-        cikkek.add(new Food("Csirkemell",5,20));
-        cikkek.add(new Food("Kukorica",3,15));
-        cikkek.add(new Food("valami",0,0));
+        cikkek.add(new Food("Kenyér",1,10,MainActivity.getContext().getResources().getDrawable(R.drawable.kenyer)));
+        cikkek.add(new Food("Kávé",1,8,MainActivity.getContext().getResources().getDrawable(R.drawable.kave)));
+        cikkek.add(new Food("Csirkemell",5,20,MainActivity.getContext().getResources().getDrawable(R.drawable.csirke)));
+        cikkek.add(new Food("Kukorica",3,15,MainActivity.getContext().getResources().getDrawable(R.drawable.kukorica)));
+        cikkek.add(new Food("valami",0,0,MainActivity.getContext().getResources().getDrawable(R.mipmap.ic_launcher)));
     }
 
     public static List<Food> getCikkek() {

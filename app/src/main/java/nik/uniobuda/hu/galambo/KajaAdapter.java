@@ -1,9 +1,11 @@
 package nik.uniobuda.hu.galambo;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,6 +42,7 @@ public class KajaAdapter extends BaseAdapter {
 
         TextView nevTextView = (TextView) listItemView.findViewById(R.id.nev);
         TextView tapa = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
+
         TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
 
         TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
@@ -52,6 +55,12 @@ public class KajaAdapter extends BaseAdapter {
         tapa.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
         arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
 
+
+        Drawable image = food.getKep();
+        int h = image.getIntrinsicHeight();
+        int w = image.getIntrinsicWidth();
+        image.setBounds( 0, 0, w, h );
+        tapa.setCompoundDrawablesRelativeWithIntrinsicBounds(image,null,null,null);
         ures.setText(" ");
         //vetelgomb.setText("Vásárlás");
         //vetelgomb.setTag(items.get(position).getNev());
