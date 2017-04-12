@@ -1,12 +1,14 @@
 package nik.uniobuda.hu.galambo;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by Adam on 2017. 04. 03..
  */
 
-public class Galamb {
+public class Galamb implements Serializable
+{
     private int teljesSzint;
 
     private String nev;
@@ -20,7 +22,7 @@ public class Galamb {
 
     public static final int ENNYIPROPERTYVAN = 6;
 
-    //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, hogy az adott kajából mennyi van éppen megvásárolva.
+    //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
     Dictionary kajamennyiseg;
 
     private int penz;

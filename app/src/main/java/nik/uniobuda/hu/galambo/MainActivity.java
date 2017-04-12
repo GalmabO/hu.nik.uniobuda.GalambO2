@@ -1,10 +1,12 @@
 package nik.uniobuda.hu.galambo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ExpandedMenuView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -64,21 +67,15 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
 
 
-
-
-            //String input = edittext.getText().toString();
-/*
-            if (!input.equals("")) {
-                galamb = new Galamb(input);
-                Toast.makeText(MainActivity.this, "Fasza!", Toast.LENGTH_LONG).show();
-            }*/
         }
-
         else
         {
             Feltolt();
 
         }
+        TextView nev = (TextView) findViewById(R.id.aa);
+        nev.setText(galamb.getNev());
+
         Button button = (Button) findViewById(R.id.gomb);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +130,37 @@ public class MainActivity extends AppCompatActivity {
     private void Mentes()
     {
 
+        FileOutputStream fos = null;
+        ObjectOutputStream oos  = null;
+        try {
+            fos = openFileOutput(FILENAME, MODE_PRIVATE);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(galamb);
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*
+        try {
+            File file = new File(FILENAME);
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    throw new IOException("Unable to create file");
+                }
+
+                FileOutputStream fileout = new FileOutputStream(file);
+                ObjectOutputStream out = new ObjectOutputStream(fileout);
+                out.writeObject(galamb);
+            }
+        }
+        catch (Exception e){}
+*/
+
+        /*
         FileOutputStream   fos  = null;
         ObjectOutputStream oos  = null;
         try {
@@ -146,11 +174,29 @@ public class MainActivity extends AppCompatActivity {
                 if (fos != null)   fos.close();
             } catch (Exception e) { }
         }
+        */
     }
 
     private void Betoltes()
     {
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            Galamb teszt = (Galamb) is.readObject();
+            if(!teszt.getNev().equals(""))
+                galamb=teszt;
+            is.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+
+        /*
         FileInputStream fis = null;
         ObjectInputStream is = null;
 
@@ -166,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 if (is != null)   is.close();
             } catch (Exception e) { }
         }
+        */
     }
 
     @Override
@@ -178,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     @Override //TODO állapotokat vissza kell majd tölteni
     protected void onResume() {
         super.onResume();
+        Betoltes();
 
 
     }

@@ -54,7 +54,7 @@ public class KajaAdapter extends BaseAdapter {
 
         ures.setText(" ");
         vetelgomb.setText("Vásárlás");
-        //vetelgomb.setTag(items.get(position).getNev());
+        vetelgomb.setTag(items.get(position).getNev());
 
         return listItemView;
     }
