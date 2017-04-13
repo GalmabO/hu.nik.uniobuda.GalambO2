@@ -1,15 +1,7 @@
 package nik.uniobuda.hu.galambo;
 
 
-import android.app.Application;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -26,7 +18,22 @@ public abstract class Store
         cikkek.add(new Food("Kávé",1,8,MainActivity.getContext().getResources().getDrawable(R.drawable.kave)));
         cikkek.add(new Food("Csirkemell",5,20,MainActivity.getContext().getResources().getDrawable(R.drawable.csirke)));
         cikkek.add(new Food("Kukorica",3,15,MainActivity.getContext().getResources().getDrawable(R.drawable.kukorica)));
-        cikkek.add(new Food("valami",0,0,MainActivity.getContext().getResources().getDrawable(R.mipmap.ic_launcher)));
+        cikkek.add(new Food("Alma",2,8,MainActivity.getContext().getResources().getDrawable(R.drawable.alma)));
+        cikkek.add(new Food("Ananász",3,15,MainActivity.getContext().getResources().getDrawable(R.drawable.ananasz)));
+        cikkek.add(new Food("Görögdinnye",1,6,MainActivity.getContext().getResources().getDrawable(R.drawable.dinnye)));
+        cikkek.add(new Food("Eper",2,10,MainActivity.getContext().getResources().getDrawable(R.drawable.eper)));
+        cikkek.add(new Food("Fánk",2,15,MainActivity.getContext().getResources().getDrawable(R.drawable.fank)));
+        cikkek.add(new Food("Hamburger",5,26,MainActivity.getContext().getResources().getDrawable(R.drawable.hamburger)));
+        cikkek.add(new Food("Hotdog",3,18,MainActivity.getContext().getResources().getDrawable(R.drawable.hotdog)));
+        cikkek.add(new Food("Narancs",2,12,MainActivity.getContext().getResources().getDrawable(R.drawable.narancs)));
+        cikkek.add(new Food("Paradicsom",1,4,MainActivity.getContext().getResources().getDrawable(R.drawable.paradicsom)));
+        cikkek.add(new Food("Uborka",1,4,MainActivity.getContext().getResources().getDrawable(R.drawable.uborka)));
+        cikkek.add(new Food("Saláta",2,8,MainActivity.getContext().getResources().getDrawable(R.drawable.salata)));
+        cikkek.add(new Food("Sültkrumpli",3,20,MainActivity.getContext().getResources().getDrawable(R.drawable.sultkrumli)));
+        cikkek.add(new Food("Torta",4,15,MainActivity.getContext().getResources().getDrawable(R.drawable.torra)));
+        cikkek.add(new Food("Pizza",5,25,MainActivity.getContext().getResources().getDrawable(R.drawable.pizza)));
+
+
     }
 
     public static List<Food> getCikkek() {
