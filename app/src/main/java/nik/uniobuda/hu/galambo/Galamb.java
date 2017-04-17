@@ -23,6 +23,11 @@ public class Galamb implements Serializable, Parcelable
     private double intelligencia;
     private double kipihentseg;
 
+
+    static final String [] ezeketcsinalhatja = new String[] {"alvás", "mozgás", "tanulás", "filmezés", "olvasás", "lazulás", "zenehallgatás" };
+
+    private String mitcsinal;
+
     public static final int ENNYIPROPERTYVAN = 6;
 
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
@@ -44,6 +49,8 @@ public class Galamb implements Serializable, Parcelable
         penz = in.readInt();
         VanETojas = in.readByte() != 0;
 
+        mitcsinal = in.readString();
+
         KajamennyisegIni();
     }
 
@@ -63,6 +70,8 @@ public class Galamb implements Serializable, Parcelable
         penz = 0;
 
         VanETojas = false;
+
+        mitcsinal = ezeketcsinalhatja[0];
 
         KajamennyisegIni();
 
@@ -152,7 +161,13 @@ public class Galamb implements Serializable, Parcelable
         this.penz += penz;
     }
 
+    public String getMitcsinal() {
+        return mitcsinal;
+    }
 
+    public void setMitcsinal(String mitcsinal) {
+        this.mitcsinal = mitcsinal;
+    }
 
     private void KajamennyisegIni()
     {
@@ -267,5 +282,6 @@ public class Galamb implements Serializable, Parcelable
         dest.writeDouble(kipihentseg);
         dest.writeInt(penz);
         dest.writeByte((byte) (VanETojas ? 1 : 0));
+        dest.writeString(mitcsinal);
     }
 }

@@ -2,6 +2,7 @@ package nik.uniobuda.hu.galambo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,10 +112,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button kajagomb = (Button) findViewById(R.id.kaja);
+        kajagomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KajaDialog();
+            }
+        });
+
+        Button tevekenyseggomb = (Button) findViewById(R.id.tevekenyseg);
+        tevekenyseggomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
-    void BoltActivityMegnyitas()
+    private void KajaDialog()
+    {
+         List<String> seged = new ArrayList<>();
+
+
+        for ( int i = 0; i < Store.getCikkek().size(); i++)
+        {
+            if((int)galamb.getKajamennyiseg().get(Store.getCikkek().get(i).getNev()) != 0) // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
+            {
+                seged.add(Store.getCikkek().get(i).getNev());
+            }
+        }
+
+        final CharSequence[] colors_radio= new CharSequence[seged.size()];
+        for ( int i = 0; i < seged.size(); i++) {
+            colors_radio[i]=seged.get(i);
+        }
+
+
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+        alt_bld.setTitle("Étel kiválasztás");
+        alt_bld.setSingleChoiceItems(colors_radio, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Toast.makeText(getApplicationContext(),
+                        "Group Name = "+colors_radio[item], Toast.LENGTH_SHORT).show();
+                dialog.dismiss();// dismiss the alertbox after chose option
+
+            }
+        });
+        AlertDialog alert = alt_bld.create();
+        alert.show();
+
+
+
+    }
+
+    private void BoltActivityMegnyitas()
     {
         Intent intent = new Intent(MainActivity.this,StoreActivity.class);
         intent.putExtra("galamb", (Parcelable) galamb);
