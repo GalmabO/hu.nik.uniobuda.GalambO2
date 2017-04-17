@@ -31,7 +31,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         alt_bld.setSingleChoiceItems(tevekenysegradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
-                        "Group Name = "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
+                        "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
                 if(item >= 0)
                 {
                     galamb.setMitcsinal(tevekenysegradio[item].toString());
@@ -197,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         alt_bld.setSingleChoiceItems(kajaradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
-                        "Group Name = "+kajaradio[item], Toast.LENGTH_SHORT).show();
+                        "A kiválasztott étel: "+kajaradio[item], Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
             }
@@ -212,7 +215,11 @@ public class MainActivity extends AppCompatActivity {
     private void BoltActivityMegnyitas()
     {
         Intent intent = new Intent(MainActivity.this,StoreActivity.class);
-        intent.putExtra("galamb", (Parcelable) galamb);
+        Bundle extras = new Bundle();
+        extras.putParcelable("galamb", galamb);
+        extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
+        intent.putExtras(extras);
+        //intent.putExtra("galamb", (Parcelable) galamb);
         this.startActivityForResult(intent, 1);
 
     }
@@ -224,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
                 galamb = (Galamb)data.getParcelableExtra("result");
+                galamb.setKajamennyiseg((HashMap) data.getSerializableExtra("dictionary"));
                 Mentes();
             }
         }

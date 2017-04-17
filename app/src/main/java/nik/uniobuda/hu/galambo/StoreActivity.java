@@ -1,24 +1,18 @@
 package nik.uniobuda.hu.galambo;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
@@ -39,8 +33,9 @@ public class StoreActivity extends AppCompatActivity {
         Feltolt();
 
         galamb = (Galamb)getIntent().getExtras().get("galamb");
+        HashMap a = (HashMap) getIntent().getExtras().get("dictionary");
 
-
+        galamb.setKajamennyiseg((HashMap) getIntent().getExtras().get("dictionary"));
 
         jatekospenzview = (TextView) findViewById(R.id.jatekospenze);
         jatekospenzview.setText(String.valueOf(galamb.getPenz()));
@@ -99,7 +94,12 @@ public class StoreActivity extends AppCompatActivity {
     public void onPause() {
 
         Intent intent = new Intent();
-        intent.putExtra("result", (Parcelable) galamb);
+        Bundle extras = new Bundle();
+        extras.putParcelable("result", galamb);
+        extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
+        intent.putExtras(extras);
+
+        //intent.putExtras("result", (Parcelable) galamb);
         this.setResult(RESULT_OK, intent);
         finish();
 
@@ -111,7 +111,12 @@ public class StoreActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         Intent intent = new Intent();
-        intent.putExtra("result", (Parcelable) galamb);
+        Bundle extras = new Bundle();
+        extras.putParcelable("result", galamb);
+        extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
+        intent.putExtras(extras);
+
+        //intent.putExtras("result", (Parcelable) galamb);
         this.setResult(RESULT_OK, intent);
         finish();
 

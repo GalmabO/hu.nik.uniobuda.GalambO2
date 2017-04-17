@@ -31,7 +31,7 @@ public class Galamb implements Serializable, Parcelable
     public static final int ENNYIPROPERTYVAN = 6;
 
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
-    private Dictionary kajamennyiseg;
+    private HashMap kajamennyiseg;
 
     private int penz;
 
@@ -51,8 +51,11 @@ public class Galamb implements Serializable, Parcelable
 
         mitcsinal = in.readString();
 
+        kajamennyiseg = new HashMap();
+
         KajamennyisegIni();
     }
+
 
     public Galamb(String nev) {
 
@@ -73,8 +76,9 @@ public class Galamb implements Serializable, Parcelable
 
         mitcsinal = ezeketcsinalhatja[0];
 
-        KajamennyisegIni();
+        kajamennyiseg = new HashMap();
 
+        KajamennyisegIni();
     }
 
     public static final Creator<Galamb> CREATOR = new Creator<Galamb>() {
@@ -101,8 +105,13 @@ public class Galamb implements Serializable, Parcelable
         this.teljesSzint += teljesSzint;
     }
 
-    public Dictionary getKajamennyiseg() {
+
+    public HashMap getKajamennyiseg() {
         return kajamennyiseg;
+    }
+
+    public void setKajamennyiseg(HashMap kajamennyiseg) {
+        this.kajamennyiseg = kajamennyiseg;
     }
 
     public double getEgeszseg() {
@@ -171,7 +180,6 @@ public class Galamb implements Serializable, Parcelable
 
     private void KajamennyisegIni()
     {
-        kajamennyiseg = new Hashtable();
         List<Food> seged = Store.getCikkek();
         for (int i = 0; i < seged.size(); i++) {
             kajamennyiseg.put(seged.get(i).getNev(),0);
@@ -283,5 +291,20 @@ public class Galamb implements Serializable, Parcelable
         dest.writeInt(penz);
         dest.writeByte((byte) (VanETojas ? 1 : 0));
         dest.writeString(mitcsinal);
+
+        /*dest.writeInt(kajamennyiseg.size());
+        for (Object s: kajamennyiseg.keySet()) {
+            dest.writeString(String.valueOf(s));
+            dest.writeString((String) kajamennyiseg.get(String.valueOf(s)));
+        }*/
     }
+
+    /*
+    public void readFromParcel(Parcel in) {
+        int count = in.readInt();
+        for (int i = 0; i < count; i++) {
+            kajamennyiseg.put(in.readString(), in.readString());
+        }
+    }*/
+
 }
