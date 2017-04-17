@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#529CE6">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:id="@+id/doveBar">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
+    <View
+        android:id="@+id/doveBar_left"
+        android:layout_width="100dp"
+        android:layout_height="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="30dp"
+        android:background="#FF0030"/>
+
+    <View
+        android:id="@+id/doveBar_right"
+        android:layout_width="100dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/doveBar_left"
+        android:background="#11FF30"/>
+
+    <ImageView
+        android:id="@+id/doveArrow"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@+id/doveBar_left"
+        android:layout_alignLeft="@+id/doveBar_left"
+        android:layout_alignStart="@+id/doveBar_left"
+        android:layout_marginBottom="15dp"
+        app:srcCompat="@drawable/nyil"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/property"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/value"
+        android:layout_below="@id/doveBar_left"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"/>
-
 
 
 </RelativeLayout>

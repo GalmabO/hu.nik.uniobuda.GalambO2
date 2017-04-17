@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 alert.show();
-
-
         }
         else
         {
@@ -124,17 +122,62 @@ public class MainActivity extends AppCompatActivity {
         tevekenyseggomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                TevekenysegDialog();
             }
         });
 
     }
 
+    private void TevekenysegDialog()
+    {
+        final CharSequence[] tevekenysegradio= new CharSequence[Galamb.ezeketcsinalhatja.length];
+        for ( int i = 0; i < Galamb.ezeketcsinalhatja.length; i++) {
+            tevekenysegradio[i]=Galamb.ezeketcsinalhatja[i];
+        }
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+        alt_bld.setTitle("Tevékenység kiválasztás");
+        alt_bld.setSingleChoiceItems(tevekenysegradio, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Toast.makeText(getApplicationContext(),
+                        "Group Name = "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
+                if(item >= 0)
+                {
+                    galamb.setMitcsinal(tevekenysegradio[item].toString());
+                    switch (item)
+                    {
+                        case 0:
+                            galamb.Alvas(2);
+                            break;
+                        case 1:
+                            galamb.Mozgas(2);
+                            break;
+                        case 2:
+                            galamb.Tanulas(2);
+                            break;
+                        case 3:
+                            galamb.Filmezes(2);
+                            break;
+                        case 4:
+                            galamb.Olvasas(2);
+                            break;
+                        case 5:
+                            galamb.Lazulas(2);
+                            break;
+                        case 6:
+                            galamb.ZeneHallgatas(2);
+                            break;
+                    }
+                }
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = alt_bld.create();
+        alert.show();
+    }
+
     private void KajaDialog()
     {
-         List<String> seged = new ArrayList<>();
-
-
+        List<String> seged = new ArrayList<>();
         for ( int i = 0; i < Store.getCikkek().size(); i++)
         {
             if((int)galamb.getKajamennyiseg().get(Store.getCikkek().get(i).getNev()) != 0) // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
@@ -143,19 +186,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        final CharSequence[] colors_radio= new CharSequence[seged.size()];
+        final CharSequence[] kajaradio= new CharSequence[seged.size()];
         for ( int i = 0; i < seged.size(); i++) {
-            colors_radio[i]=seged.get(i);
+            kajaradio[i]=seged.get(i);
         }
 
 
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
         alt_bld.setTitle("Étel kiválasztás");
-        alt_bld.setSingleChoiceItems(colors_radio, -1, new DialogInterface.OnClickListener() {
+        alt_bld.setSingleChoiceItems(kajaradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
-                        "Group Name = "+colors_radio[item], Toast.LENGTH_SHORT).show();
-                dialog.dismiss();// dismiss the alertbox after chose option
+                        "Group Name = "+kajaradio[item], Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
 
             }
         });

@@ -1,8 +1,11 @@
 package nik.uniobuda.hu.galambo;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,14 +39,37 @@ public class PropertyAdapter extends BaseAdapter {
         View listItemView = convertView;
         if(listItemView == null)
             listItemView= View.inflate(parent.getContext(), R.layout.listitem_adatok,null);
-        TextView valueTextView = (TextView) listItemView.findViewById(R.id.value);
+
         TextView propertyTextView = (TextView) listItemView.findViewById(R.id.property);
 
-        //első érték a value, második a property neve
-        Object [] tul = items.get(position);
-        valueTextView.setText(tul[0].toString());
-        propertyTextView.setText(tul[1].toString());
 
+        Object [] tul = items.get(position);
+        double mennyi = (double)tul[0];
+
+        mennyi = mennyi + 100;
+        ImageView doveArrow = (ImageView)listItemView.findViewById(R.id.doveArrow);
+        android.view.ViewGroup.MarginLayoutParams marginParams = (android.view.ViewGroup.MarginLayoutParams) doveArrow.getLayoutParams();
+
+        mennyi = mennyi - 10;
+
+        marginParams.setMargins(dpToPx(mennyi), marginParams.topMargin, marginParams.rightMargin, marginParams.bottomMargin);
+
+        RelativeLayout doveBar = (RelativeLayout) listItemView.findViewById(R.id.doveBar);
+        doveBar.requestLayout();
+
+        //első érték a value, második a property neve
+        propertyTextView.setText(tul[1].toString());
         return listItemView;
     }
+
+    public static int dpToPx(double dp)
+    {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px)
+    {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
 }
