@@ -60,7 +60,7 @@ public class KajaAdapter extends BaseAdapter {
         int h = image.getIntrinsicHeight();
         int w = image.getIntrinsicWidth();
         image.setBounds( 0, 0, w, h );
-        tapa.setCompoundDrawablesRelativeWithIntrinsicBounds(image,null,null,null);
+        arTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,image);
         ures.setText(" ");
         //vetelgomb.setText("Vásárlás");
         //vetelgomb.setTag(items.get(position).getNev());
