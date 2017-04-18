@@ -1,8 +1,10 @@
 package nik.uniobuda.hu.galambo;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,14 +16,14 @@ import java.util.List;
  * Created by Adam on 2017. 04. 05..
  */
 
-public class PropertyAdapter extends BaseAdapter {
+public class PropertyAdapter extends ArrayAdapter<ListItemDataModel> {
 
     //első érték a value, második a property neve
     private List<Object[]> items;
 
-    public PropertyAdapter(List<Object[]> items) { this.items = items; }
+//    public PropertyAdapter(List<Object[]> items) { this.items = items; }
 
-    @Override
+   /* @Override
     public int getCount()  {
         return items == null ? 0 : items.size();
     }
@@ -30,10 +32,23 @@ public class PropertyAdapter extends BaseAdapter {
     public Object getItem(int position)  {
         return items == null ? null : items.get(position);
     }
+    */
+    Context mContext;
+    int layoutResourceId;
+    ListItemDataModel data[] = null;
 
+    public PropertyAdapter(Context mContext, int layoutResourceId, ListItemDataModel[] data) {
+
+        super(mContext, layoutResourceId, data);
+        this.layoutResourceId = layoutResourceId;
+        this.mContext = mContext;
+        this.data = data;
+    }
+
+    /*
     @Override
     public long getItemId(int position) { return position; }
-
+*/
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItemView = convertView;
@@ -43,8 +58,8 @@ public class PropertyAdapter extends BaseAdapter {
         TextView propertyTextView = (TextView) listItemView.findViewById(R.id.property);
 
 
-        Object [] tul = items.get(position);
-        double mennyi = (double)tul[0];
+        ListItemDataModel tul = data[position];
+        double mennyi = tul.value;
 
         mennyi = mennyi + 100;
         ImageView doveArrow = (ImageView)listItemView.findViewById(R.id.doveArrow);
@@ -58,7 +73,7 @@ public class PropertyAdapter extends BaseAdapter {
         doveBar.requestLayout();
 
         //első érték a value, második a property neve
-        propertyTextView.setText(tul[1].toString());
+        propertyTextView.setText(tul.prop.toString());
         return listItemView;
     }
 

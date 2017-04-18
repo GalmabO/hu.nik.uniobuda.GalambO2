@@ -81,6 +81,7 @@ public class Galamb implements Serializable, Parcelable
         KajamennyisegIni();
     }
 
+
     public static final Creator<Galamb> CREATOR = new Creator<Galamb>() {
         @Override
         public Galamb createFromParcel(Parcel in) {

@@ -7,12 +7,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ExpandedMenuView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -48,11 +54,28 @@ public class MainActivity extends AppCompatActivity {
         return mContext;
     }
 
+
+    // következők a swipe-barhoz tartozó cuccok
+    private String[] mNavigationDrawerItemTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    Toolbar toolbar;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        mTitle = mDrawerTitle = getTitle();
+        mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        setupToolbar();
 
         mContext = this;
         Betoltes();
@@ -250,9 +273,59 @@ public class MainActivity extends AppCompatActivity {
         items.add(new Object[]{galamb.getFittseg(),"Fittség"});
         items.add(new Object[]{galamb.getKipihentseg(),"Kipihentség"});
 
-        PropertyAdapter adapter = new PropertyAdapter(items);
-        GridView lista = (GridView) findViewById(R.id.lista);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        // az object[]-ökből álló lista helyett bevezetek egy erre dedikált osztályt (hogy szabványosan meg lehessen csinálni az adaptert)
+        ListItemDataModel[] drawerItem = new ListItemDataModel[Galamb.ENNYIPROPERTYVAN];
+
+
+        for (int i = 0; i < drawerItem.length; i++) {
+            double thisValue = 0;
+
+            if (mNavigationDrawerItemTitles[i].equals("Egészség"))
+                thisValue = galamb.getEgeszseg();
+            else if (mNavigationDrawerItemTitles[i].equals("Jóllakottság"))
+                thisValue = galamb.getJollakottsag();
+            else if (mNavigationDrawerItemTitles[i].equals("Kipihentség"))
+                thisValue = galamb.getKipihentseg();
+            else if (mNavigationDrawerItemTitles[i].equals("Fittség"))
+                thisValue = galamb.getFittseg();
+            else if (mNavigationDrawerItemTitles[i].equals("Intelligencia"))
+                thisValue = galamb.getIntelligencia();
+            else if (mNavigationDrawerItemTitles[i].equals("Kedélyállapot"))
+                thisValue = galamb.getKedelyallapot();
+
+            drawerItem[i] = new ListItemDataModel
+                    (
+                            mNavigationDrawerItemTitles[i],
+                            thisValue
+                    );
+        }
+
+
+        PropertyAdapter adapter = new PropertyAdapter(this, R.layout.listitem_adatok, drawerItem);
+        ListView lista = (ListView) findViewById(R.id.left_drawer);
         lista.setAdapter(adapter);
+
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        setupDrawerToggle();
+
+        mDrawerLayout.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mDrawerToggle.syncState();
+
+            }
+
+        });
+
     }
 
     private void Mentes()
@@ -306,4 +379,59 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    // ------------------------- okádék metódusok a swipe-barhoz ---------------------------------- //
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            // TODO: kérte, hogy legyen...:)
+
+        }
+    }
+
+    private void selectItem(int position) {
+
+        //TODO: mit csináljunk kiválasztáskor...
+
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    /*@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }*/
+
+    void setupToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    void setupDrawerToggle(){
+        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
+        //This is necessary to change the icon of the Drawer Toggle upon state change.
+        mDrawerToggle.syncState();
+    }
 }
+

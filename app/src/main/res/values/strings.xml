@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GalambO</string>
+    <string-array name="navigation_drawer_items_array">
+        <item>Egészség</item>
+        <item>Jóllakottság</item>
+        <item>Kedélyállapot</item>
+        <item>Intelligencia</item>
+        <item>Fittség</item>
+        <item>Kipihentség</item>
+    </string-array>
 </resources>
