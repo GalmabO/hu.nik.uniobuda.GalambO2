@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                             TextView text = (TextView) findViewById(R.id.aa) ;
                             text.setText(galamb.getNev());
                             Toast.makeText(MainActivity.this, "Sikeres létrehozás!", Toast.LENGTH_LONG).show();
+                            Feltolt(); // Kristóf: ezt azért írtam ide, mert különben csak frissítő gomb nyomására látszik a swipe lista meg a galamb
+                            Mentes();
                         }
                     }
                 });
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Feltolt();
         }
+
 
 
         Button button = (Button) findViewById(R.id.gomb);
@@ -262,6 +267,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void Feltolt()
     {
+
+        ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
+        galambKep.setClickable(true);
+
+        if (true) {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        //TODO: if-ek, hogy milyen esetben milyen kép kell...
+
+        galambKep.setImageResource(galamb.getKepId());
         TextView nev = (TextView) findViewById(R.id.aa);
         nev.setText(galamb.getNev());
 
@@ -303,7 +318,6 @@ public class MainActivity extends AppCompatActivity {
                             thisValue
                     );
         }
-
 
         PropertyAdapter adapter = new PropertyAdapter(this, R.layout.listitem_adatok, drawerItem);
         ListView lista = (ListView) findViewById(R.id.left_drawer);
@@ -388,7 +402,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            // TODO: kérte, hogy legyen...:)
 
         }
     }

@@ -16,6 +16,8 @@ public class Galamb implements Serializable, Parcelable
 
     private String nev;
 
+    private int kepId;
+
     private double egeszseg;
     private double fittseg;
     private double jollakottsag;
@@ -104,6 +106,14 @@ public class Galamb implements Serializable, Parcelable
 
     public void setTeljesSzint(int teljesSzint) {
         this.teljesSzint += teljesSzint;
+    }
+
+    public int getKepId() {
+        return kepId;
+    }
+
+    public void setKepId(int kepId) {
+        this.kepId = kepId;
     }
 
 
