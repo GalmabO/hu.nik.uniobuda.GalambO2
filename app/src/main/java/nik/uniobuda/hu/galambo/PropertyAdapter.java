@@ -16,23 +16,23 @@ import java.util.List;
  * Created by Adam on 2017. 04. 05..
  */
 
-public class PropertyAdapter extends ArrayAdapter<ListItemDataModel> {
+public class PropertyAdapter extends BaseAdapter  {
 
     //első érték a value, második a property neve
-    private List<Object[]> items;
+    private List<ListItemDataModel> items;
 
-//    public PropertyAdapter(List<Object[]> items) { this.items = items; }
+    public PropertyAdapter(List<ListItemDataModel> items) { this.items = items; }
 
-   /* @Override
-    public int getCount()  {
-        return items == null ? 0 : items.size();
-    }
+   @Override
+    public int getCount()  { return items == null ? 0 : items.size();  }
 
     @Override
-    public Object getItem(int position)  {
-        return items == null ? null : items.get(position);
-    }
-    */
+    public Object getItem(int position)  {  return items == null ? null : items.get(position);  }
+
+    @Override
+    public long getItemId(int position) { return 0;   }
+
+    /*
     Context mContext;
     int layoutResourceId;
     ListItemDataModel data[] = null;
@@ -44,11 +44,9 @@ public class PropertyAdapter extends ArrayAdapter<ListItemDataModel> {
         this.mContext = mContext;
         this.data = data;
     }
+    */
 
-    /*
-    @Override
-    public long getItemId(int position) { return position; }
-*/
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItemView = convertView;
@@ -58,8 +56,8 @@ public class PropertyAdapter extends ArrayAdapter<ListItemDataModel> {
         TextView propertyTextView = (TextView) listItemView.findViewById(R.id.property);
 
 
-        ListItemDataModel tul = data[position];
-        double mennyi = tul.value;
+        ListItemDataModel tul =  items.get(position);
+        double mennyi = tul.getValue();
 
         mennyi = mennyi + 100;
         ImageView doveArrow = (ImageView)listItemView.findViewById(R.id.doveArrow);
@@ -73,7 +71,7 @@ public class PropertyAdapter extends ArrayAdapter<ListItemDataModel> {
         doveBar.requestLayout();
 
         //első érték a value, második a property neve
-        propertyTextView.setText(tul.prop.toString());
+        propertyTextView.setText(tul.getProp().toString());
         return listItemView;
     }
 

@@ -41,6 +41,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                         "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
                 if(item >= 0)
                 {
-                    galamb.setMitcsinal(tevekenysegradio[item].toString());
+                    galamb.setMitcsinal(Galamb.ezeketcsinalhatja[item].toString());
                     switch (item)
                     {
                         case 0:
@@ -198,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
                             galamb.ZeneHallgatas(2);
                             break;
                     }
+                    KépVáltás();
                 }
                 dialog.dismiss();
             }
@@ -211,7 +213,8 @@ public class MainActivity extends AppCompatActivity {
         List<String> seged = new ArrayList<>();
         for ( int i = 0; i < Store.getCikkek().size(); i++)
         {
-            if((int)galamb.getKajamennyiseg().get(Store.getCikkek().get(i).getNev()) != 0) // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
+            if((int)galamb.getKajamennyiseg().get(Store.getCikkek().get(i).getNev()) != 0)
+                // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
             {
                 seged.add(Store.getCikkek().get(i).getNev());
             }
@@ -247,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
         extras.putParcelable("galamb", galamb);
         extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
         intent.putExtras(extras);
-        //intent.putExtra("galamb", (Parcelable) galamb);
         this.startActivityForResult(intent, 1);
 
     }
@@ -267,36 +269,70 @@ public class MainActivity extends AppCompatActivity {
 
     private void Feltolt()
     {
-
-        ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
-        galambKep.setClickable(true);
-
-        if (true) {
-            galamb.setKepId(R.drawable.sima_galamb);
-        }
-        //TODO: if-ek, hogy milyen esetben milyen kép kell...
-
-        galambKep.setImageResource(galamb.getKepId());
         TextView nev = (TextView) findViewById(R.id.aa);
         nev.setText(galamb.getNev());
-
-        List<Object[]> items = new ArrayList<>();
-        items.add(new Object[]{galamb.getEgeszseg(),"Egészség"});
-        items.add(new Object[]{galamb.getKedelyallapot(),"Kedélyállapot"});
-        items.add(new Object[]{galamb.getJollakottsag(),"Jóllakottság"});
-        items.add(new Object[]{galamb.getIntelligencia(),"Intelligencia"});
-        items.add(new Object[]{galamb.getFittseg(),"Fittség"});
-        items.add(new Object[]{galamb.getKipihentseg(),"Kipihentség"});
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        KépVáltás();
 
-        // az object[]-ökből álló lista helyett bevezetek egy erre dedikált osztályt (hogy szabványosan meg lehessen csinálni az adaptert)
-        ListItemDataModel[] drawerItem = new ListItemDataModel[Galamb.ENNYIPROPERTYVAN];
+        PropertyAdapter adapter = ListaFeltoltesEsAdapterreKonvertalas();
+        ListView lista = (ListView) findViewById(R.id.left_drawer);
+        lista.setAdapter(adapter);
+        SvipehezBeallitas();
 
 
-        for (int i = 0; i < drawerItem.length; i++) {
+    }
+
+    private void KépVáltás()
+    {
+
+        ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
+        galambKep.setClickable(true);
+
+        if (galamb.getMitcsinal() == "alvás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "mozgás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "tanulás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "filmezés")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "olvasás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "lazulás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else if(galamb.getMitcsinal() == "zenehallgatás")
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        else
+        {
+            galamb.setKepId(R.drawable.sima_galamb);
+        }
+        galambKep.setImageResource(galamb.getKepId());
+
+    }
+
+    private PropertyAdapter ListaFeltoltesEsAdapterreKonvertalas()
+    {
+        List<ListItemDataModel> drawerItem = new ArrayList<>(Galamb.ENNYIPROPERTYVAN);
+
+
+        for (int i = 0; i < Galamb.ENNYIPROPERTYVAN; i++) {
             double thisValue = 0;
 
             if (mNavigationDrawerItemTitles[i].equals("Egészség"))
@@ -312,19 +348,18 @@ public class MainActivity extends AppCompatActivity {
             else if (mNavigationDrawerItemTitles[i].equals("Kedélyállapot"))
                 thisValue = galamb.getKedelyallapot();
 
-            drawerItem[i] = new ListItemDataModel
+            drawerItem.add(new ListItemDataModel
                     (
                             mNavigationDrawerItemTitles[i],
                             thisValue
-                    );
+                    ));
         }
+        return new PropertyAdapter(drawerItem);
+    }
 
-        PropertyAdapter adapter = new PropertyAdapter(this, R.layout.listitem_adatok, drawerItem);
-        ListView lista = (ListView) findViewById(R.id.left_drawer);
-        lista.setAdapter(adapter);
-
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    private void SvipehezBeallitas()
+    {
+        mDrawerList.setAdapter(ListaFeltoltesEsAdapterreKonvertalas());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setupDrawerToggle();
@@ -333,13 +368,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-
                 mDrawerToggle.syncState();
-
             }
 
         });
-
     }
 
     private void Mentes()
@@ -359,7 +391,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     private void Betoltes()
     {
         try {
@@ -378,14 +409,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         Mentes();
     }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -394,24 +422,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // ------------------------- okádék metódusok a swipe-barhoz ---------------------------------- //
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-        }
-    }
-
-    private void selectItem(int position) {
-
-        //TODO: mit csináljunk kiválasztáskor...
-
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -429,17 +439,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(mTitle);
     }
 
-    /*@Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }*/
-
     void setupToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
+
+     @Override
+     protected void onPostCreate(Bundle savedInstanceState) {
+         super.onPostCreate(savedInstanceState);
+         SvipehezBeallitas();
+         mDrawerToggle.syncState();
+     }
 
     void setupDrawerToggle(){
         mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);

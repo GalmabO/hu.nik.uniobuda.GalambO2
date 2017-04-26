@@ -31,7 +31,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="nik.uniobuda.hu.galambo.MainActivity"
-            android:background="#FFFFFF">
+            android:background="#5c436A">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -41,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_centerHorizontal="true"
+                    android:textColor="#ffc020"
                     android:id="@+id/aa"
                     android:textSize="30sp"/>
 
@@ -48,9 +49,9 @@
                     android:id="@+id/galamb_kep"
                     android:layout_weight="2"
                     android:layout_gravity="center"
-                    android:background="#FFFFFF"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@null" />
 
 
                 <android.support.v7.widget.AppCompatButton
