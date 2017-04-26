@@ -274,31 +274,31 @@ public class MainActivity extends AppCompatActivity {
         ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
         galambKep.setClickable(true);
 
-        if (galamb.getMitcsinal() == "alvás")
+        if (galamb.getMitcsinal() .equals( "alvás"))
         {
             galamb.setKepId(R.drawable.alszik);
         }
-        else if(galamb.getMitcsinal() == "mozgás")
+        else if(galamb.getMitcsinal() .equals( "mozgás"))
         {
             galamb.setKepId(R.drawable.sportol);
         }
-        else if(galamb.getMitcsinal() == "tanulás")
+        else if(galamb.getMitcsinal() .equals( "tanulás"))
         {
             galamb.setKepId(R.drawable.tanul);
         }
-        else if(galamb.getMitcsinal() == "filmezés")
+        else if(galamb.getMitcsinal() .equals( "filmezés"))
         {
             galamb.setKepId(R.drawable.telefonozik);
         }
-        else if(galamb.getMitcsinal() == "olvasás")
+        else if(galamb.getMitcsinal() .equals( "olvasás"))
         {
             galamb.setKepId(R.drawable.olvas);
         }
-        else if(galamb.getMitcsinal() == "lazulás")
+        else if(galamb.getMitcsinal().equals( "lazulás"))
         {
             galamb.setKepId(R.drawable.lazul);
         }
-        else if(galamb.getMitcsinal() == "zenehallgatás")
+        else if(galamb.getMitcsinal().equals("zenehallgatás"))
         {
             galamb.setKepId(R.drawable.zenethallgat);
         }
