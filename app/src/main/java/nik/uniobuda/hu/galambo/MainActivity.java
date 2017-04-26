@@ -1,38 +1,23 @@
 package nik.uniobuda.hu.galambo;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ExpandedMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,8 +26,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 
@@ -293,35 +276,35 @@ public class MainActivity extends AppCompatActivity {
 
         if (galamb.getMitcsinal() == "alvás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.alszik);
         }
         else if(galamb.getMitcsinal() == "mozgás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.sportol);
         }
         else if(galamb.getMitcsinal() == "tanulás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.tanul);
         }
         else if(galamb.getMitcsinal() == "filmezés")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.telefonozik);
         }
         else if(galamb.getMitcsinal() == "olvasás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.olvas);
         }
         else if(galamb.getMitcsinal() == "lazulás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.lazul);
         }
         else if(galamb.getMitcsinal() == "zenehallgatás")
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.zenethallgat);
         }
         else
         {
-            galamb.setKepId(R.drawable.sima_galamb);
+            galamb.setKepId(R.drawable.sima_galamb_3);
         }
         galambKep.setImageResource(galamb.getKepId());
 
