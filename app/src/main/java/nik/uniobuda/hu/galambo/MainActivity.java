@@ -61,6 +61,28 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                SvipehezBeallitas();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         setupToolbar();
 
         mContext = this;
@@ -109,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button frissitogomb = (Button) findViewById(R.id.feltolto);
+        /*Button frissitogomb = (Button) findViewById(R.id.feltolto);
         frissitogomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Feltolt();
             }
-        });
+        });*/
 
         Button boltgomb = (Button) findViewById(R.id.bolt);
         boltgomb.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                             galamb.ZeneHallgatas(2);
                             break;
                     }
-                    KépVáltás();
+                    KepValtas();
                 }
                 dialog.dismiss();
             }
@@ -258,17 +280,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        KépVáltás();
+        KepValtas();
 
         PropertyAdapter adapter = ListaFeltoltesEsAdapterreKonvertalas();
         ListView lista = (ListView) findViewById(R.id.left_drawer);
         lista.setAdapter(adapter);
+
         SvipehezBeallitas();
 
 
     }
 
-    private void KépVáltás()
+    private void KepValtas()
     {
 
         ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
