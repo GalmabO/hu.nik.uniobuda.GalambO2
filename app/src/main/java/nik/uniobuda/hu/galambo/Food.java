@@ -11,7 +11,7 @@ public class Food {
     private String nev;
     private int tapanyagmennyiseg;
     private int ar;
-    private Drawable kep;
+    private int kepID;
 
     public String getNev() {
         return nev;
@@ -25,16 +25,16 @@ public class Food {
         return ar;
     }
 
-    public Drawable getKep() {
-        return kep;
+    public int getKepID() {
+        return kepID;
     }
 
 
-    public Food(String nev, int tapanyagmennyiseg, int ar, Drawable kep) {
+    public Food(String nev, int tapanyagmennyiseg, int ar, int kepID) {
         this.nev = nev;
         this.tapanyagmennyiseg = tapanyagmennyiseg;
         this.ar = ar;
-        this.kep = kep;
+        this.kepID = kepID;
     }
 
 }

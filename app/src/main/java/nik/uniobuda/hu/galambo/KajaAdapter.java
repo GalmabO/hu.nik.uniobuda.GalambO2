@@ -1,5 +1,6 @@
 package nik.uniobuda.hu.galambo;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,9 @@ public class KajaAdapter extends BaseAdapter {
 
     //Első a név, második az ár
     private List<Food> items;
+    private Context appContext;
 
-    public KajaAdapter(List<Food> items) { this.items = items; }
+    public KajaAdapter(List<Food> items, Context appContext) { this.items = items; this.appContext = appContext; }
 
     @Override
     public int getCount()  {
@@ -56,11 +58,11 @@ public class KajaAdapter extends BaseAdapter {
         arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
 
 
-        Drawable image = food.getKep();
-        int h = image.getIntrinsicHeight();
-        int w = image.getIntrinsicWidth();
-        image.setBounds( 0, 0, w, h );
-        arTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,image);
+        Drawable image = appContext.getResources().getDrawable(food.getKepID(),null);
+//        int h = image.getIntrinsicHeight();
+//        int w = image.getIntrinsicWidth();
+//        image.setBounds( 0, 0, w, h );
+        arTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,image);
         ures.setText(" ");
         //vetelgomb.setText("Vásárlás");
         //vetelgomb.setTag(items.get(position).getNev());

@@ -33,12 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Galamb galamb;
     private final String FILENAME = "GalambPeldany";
-    private static Context mContext;
-
-    public static Context getContext()
-    {
-        return mContext;
-    }
 
 
     // következők a swipe-barhoz tartozó cuccok
@@ -85,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        mContext = this;
         Betoltes();
 
         if(galamb == null)

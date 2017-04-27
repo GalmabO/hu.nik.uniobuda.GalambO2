@@ -76,7 +76,7 @@ public class StoreActivity extends AppCompatActivity {
 
     private void Feltolt()
     {
-        adapter = new KajaAdapter(foods);
+        adapter = new KajaAdapter(foods,getApplicationContext());
         grid = (GridView) findViewById(R.id.araslista);
         grid.setAdapter(adapter);
 
