@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,7 +28,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,29 +60,22 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+        setupToolbar();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-            }
+            public void onDrawerSlide(View drawerView, float slideOffset) { }
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                galamb.DoveActivityChange(galamb.getMitcsinal(), Calendar.getInstance().getTime()); //így realtime a stat
                 SvipehezBeallitas();
             }
+            @Override
+            public void onDrawerClosed(View drawerView) { }
 
             @Override
-            public void onDrawerClosed(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+            public void onDrawerStateChanged(int newState) { }
         });
-
-        setupToolbar();
 
         Betoltes();
 
@@ -119,18 +117,9 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                galamb.setJollakottsag(10);
                 galamb.setPenz(100);
             }
         });
-
-        /*Button frissitogomb = (Button) findViewById(R.id.feltolto);
-        frissitogomb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Feltolt();
-            }
-        });*/
 
         Button boltgomb = (Button) findViewById(R.id.bolt);
         boltgomb.setOnClickListener(new View.OnClickListener() {
@@ -172,31 +161,9 @@ public class MainActivity extends AppCompatActivity {
                         "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
                 if(item >= 0)
                 {
-                    galamb.setMitcsinal(Galamb.ezeketcsinalhatja[item].toString());
-                    switch (item)
-                    {
-                        case 0:
-                            galamb.Alvas(2);
-                            break;
-                        case 1:
-                            galamb.Mozgas(2);
-                            break;
-                        case 2:
-                            galamb.Tanulas(2);
-                            break;
-                        case 3:
-                            galamb.Filmezes(2);
-                            break;
-                        case 4:
-                            galamb.Olvasas(2);
-                            break;
-                        case 5:
-                            galamb.Lazulas(2);
-                            break;
-                        case 6:
-                            galamb.ZeneHallgatas(2);
-                            break;
-                    }
+                    galamb.DoveActivityChange(item, Calendar.getInstance().getTime());
+                    galamb.setMitcsinal(item);
+
                     KepValtas();
                 }
                 dialog.dismiss();
@@ -228,8 +195,23 @@ public class MainActivity extends AppCompatActivity {
         alt_bld.setTitle("Étel kiválasztás");
         alt_bld.setSingleChoiceItems(kajaradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                Toast.makeText(getApplicationContext(),
-                        "A kiválasztott étel: "+kajaradio[item], Toast.LENGTH_SHORT).show();
+                for (int i= 0; i<Store.getCikkek().size();i++)
+                {
+                    if(Store.getCikkek().get(i).getNev().equals(kajaradio[item]))
+                    {
+
+                        galamb.setSelectedFood(i);
+                        break;
+                    }
+                }
+                TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
+                if(galamb.getSelectedFood() != -1)
+                {
+                    kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
+                    Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+                    kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+                }
+
                 dialog.dismiss();
 
             }
@@ -281,42 +263,55 @@ public class MainActivity extends AppCompatActivity {
 
         SvipehezBeallitas();
 
+        TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
+
+        if(galamb.getSelectedFood() != -1 && 0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
+        {
+            kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
+            Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+            kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+        }
+        else
+            kivalasztottkajaText.setText("Nincs kiválasztva étel!");
 
     }
 
     private void KepValtas()
     {
-
         ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
         galambKep.setClickable(true);
 
-        if (galamb.getMitcsinal() .equals( "alvás"))
+        if (galamb.getMitcsinal() == (0))
         {
             galamb.setKepId(R.drawable.alszik);
         }
-        else if(galamb.getMitcsinal() .equals( "mozgás"))
+        else if(galamb.getMitcsinal() == 1)
         {
             galamb.setKepId(R.drawable.sportol);
         }
-        else if(galamb.getMitcsinal() .equals( "tanulás"))
+        else if(galamb.getMitcsinal()== 2)
         {
             galamb.setKepId(R.drawable.tanul);
         }
-        else if(galamb.getMitcsinal() .equals( "filmezés"))
+        else if(galamb.getMitcsinal() == 3 )
         {
             galamb.setKepId(R.drawable.telefonozik);
         }
-        else if(galamb.getMitcsinal() .equals( "olvasás"))
+        else if(galamb.getMitcsinal() == 4)
         {
             galamb.setKepId(R.drawable.olvas);
         }
-        else if(galamb.getMitcsinal().equals( "lazulás"))
+        else if(galamb.getMitcsinal() == 5)
         {
             galamb.setKepId(R.drawable.lazul);
         }
-        else if(galamb.getMitcsinal().equals("zenehallgatás"))
+        else if(galamb.getMitcsinal() == 6)
         {
             galamb.setKepId(R.drawable.zenethallgat);
+        }
+        else if(galamb.getMitcsinal() == 7)
+        {
+            galamb.setKepId(R.drawable.dolgozas);
         }
         else
         {
@@ -444,12 +439,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-     @Override
+     /*@Override
      protected void onPostCreate(Bundle savedInstanceState) {
          super.onPostCreate(savedInstanceState);
-         SvipehezBeallitas();
          mDrawerToggle.syncState();
-     }
+     }*/
 
     void setupDrawerToggle(){
         mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);

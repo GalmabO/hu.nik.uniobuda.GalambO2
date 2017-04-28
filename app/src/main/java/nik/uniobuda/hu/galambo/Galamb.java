@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Adam on 2017. 04. 03..
@@ -25,19 +28,20 @@ public class Galamb implements Serializable, Parcelable
     private double intelligencia;
     private double kipihentseg;
 
+    static final String [] ezeketcsinalhatja = new String[] {"alvás", "mozgás", "tanulás", "telefonozás", "olvasás", "lazulás", "zenehallgatás", "dolgozás" };
 
-    static final String [] ezeketcsinalhatja = new String[] {"alvás", "mozgás", "tanulás", "filmezés", "olvasás", "lazulás", "zenehallgatás" };
+    private int mitcsinal;
 
-    private String mitcsinal;
+    private long activityStartedDate;
 
     public static final int ENNYIPROPERTYVAN = 6;
 
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
     private HashMap kajamennyiseg;
 
-    private int penz;
+    private int selectedFood;
 
-    private boolean VanETojas;
+    private int penz;
 
     protected Galamb(Parcel in) {
         teljesSzint = in.readInt();
@@ -49,9 +53,12 @@ public class Galamb implements Serializable, Parcelable
         intelligencia = in.readDouble();
         kipihentseg = in.readDouble();
         penz = in.readInt();
-        VanETojas = in.readByte() != 0;
 
-        mitcsinal = in.readString();
+        mitcsinal = in.readInt();
+
+        selectedFood = in.readInt();
+
+        activityStartedDate = in.readLong();
 
         kajamennyiseg = new HashMap();
 
@@ -74,9 +81,11 @@ public class Galamb implements Serializable, Parcelable
 
         penz = 0;
 
-        VanETojas = false;
+        mitcsinal = 0;
 
-        mitcsinal = ezeketcsinalhatja[0];
+        activityStartedDate= Calendar.getInstance().getTime().getTime();
+
+        selectedFood = -1;
 
         kajamennyiseg = new HashMap();
 
@@ -116,6 +125,13 @@ public class Galamb implements Serializable, Parcelable
         this.kepId = kepId;
     }
 
+    public int getSelectedFood() {
+        return selectedFood;
+    }
+
+    public void setSelectedFood(int selectedFood) {
+        this.selectedFood = selectedFood;
+    }
 
     public HashMap getKajamennyiseg() {
         return kajamennyiseg;
@@ -181,11 +197,11 @@ public class Galamb implements Serializable, Parcelable
         this.penz += penz;
     }
 
-    public String getMitcsinal() {
+    public int getMitcsinal() {
         return mitcsinal;
     }
 
-    public void setMitcsinal(String mitcsinal) {
+    public void setMitcsinal(int mitcsinal) {
         this.mitcsinal = mitcsinal;
     }
 
@@ -199,85 +215,136 @@ public class Galamb implements Serializable, Parcelable
 
     public void Alvas(double time)
     {
-        if(time < 8)
-            kipihentseg+=time*1.5; //8óránál kevesebb alvás
+        if(time < 480) //480--> 80 óra
+            kipihentseg+=(time*2)/60; //8óránál kevesebb alvás
         else
         {
-            kipihentseg+=time*0.8; //túlalvás
-            intelligencia-=time*0.01; // sok alvástól butább lesz
+            kipihentseg+=(time*1.5)/60; //túlalvás
+            intelligencia-=(time*0.01)/60; // sok alvástól butább lesz
         }
-        fittseg-=time*0.08; //az alvástól veszéít a fittségéből (kis mennyiségben)
-        jollakottsag-=time; // eltelt idővel arányosan lesz éhes
+        fittseg-=(time*0.08)/60; //az alvástól veszéít a fittségéből (kis mennyiségben)
+        jollakottsag-=time/60; // eltelt idővel arányosan lesz éhes
     }
-
     public void Mozgas(double time)
     {
-        fittseg +=time*1.5;
-        kipihentseg -= time*0.5;
-        kedelyallapot+=time*0.5;
-        jollakottsag-=time;
+        fittseg +=(time*1.5)/60;
+        kipihentseg -= (time*0.5)/60;
+        kedelyallapot+=(time*0.5)/60;
+        jollakottsag-=time/60;
+        egeszseg+=(time*0.2)/60;
     }
 
     public void Tanulas(double time)
     {
-        intelligencia+=time*2;
+        intelligencia+=(time*2)/60;
         Random rnd = new Random();
-        kedelyallapot+=time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2; //random hogy jó-e tanulni
-        fittseg-=time*0.08;
-        kipihentseg -= time*0.8;
-        jollakottsag-=time;
+        kedelyallapot+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2)/60; //random hogy jó-e tanulni
+        fittseg-=(time*0.08)/60;
+        kipihentseg -= (time*0.8)/60;
+        jollakottsag-=time/60;
+        penz+=(time)/60;
     }
 
-    public void Filmezes(double time)
+    public void Telefonozas(double time)
     {
-        kedelyallapot+=time*1.01;
+        kedelyallapot+=(time*1.01)/60;
         Random rnd = new Random();
-        intelligencia+=time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2;
-        fittseg-=time*0.08;
-        kipihentseg -= time*0.6;
-        jollakottsag-=time;
+        intelligencia+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2);
+        fittseg-=(time*0.08)/60;
+        kipihentseg -= (time*0.6)/60;
+        egeszseg-=(time*0.1)/60;
+        jollakottsag-=(time)/60;
     }
 
     public void Olvasas(double time)
     {
-        intelligencia+=time*1.2;
-        kipihentseg -= time*0.8;
-        fittseg-=time*0.08;
-        jollakottsag-=time;
+        intelligencia+=(time*1.2)/60;
+        kipihentseg -= (time*0.8)/60;
+        fittseg-=(time*0.08)/60;
+        jollakottsag-=(time)/60;
     }
 
     public void Lazulas(double time)
     {
-        kedelyallapot += time*2;
-        kipihentseg -= time*0.3;
-        fittseg-=time*0.08;
-        jollakottsag-=time;
+        kedelyallapot += (time*2)/60;
+        kipihentseg -= (time*0.3)/60;
+        fittseg-=(time*0.08)/60;
+        jollakottsag-=(time)/60;
+        egeszseg-=(time*0.1)/60;
     }
 
     public void ZeneHallgatas(double time)
     {
-        kedelyallapot += time*1.3;
-        kipihentseg -= time*0.2;
-        fittseg-=time*0.08;
-        jollakottsag-=time;
+        kedelyallapot += (time*1.3)/60;
+        kipihentseg -=( time*0.2)/60;
+        fittseg-=(time*0.08)/60;
+        jollakottsag-=(time)/60;
+    }
+
+    public void Dolgozas(double time)
+    {
+        kedelyallapot -= (time*0.5)/60;
+        kipihentseg -=( time*0.5)/60;
+        fittseg-=(time*0.5)/60;
+        egeszseg-=(time*0.1)/60;
+        intelligencia -=(time*0.05)/60;
+        jollakottsag-=(time)/60;
+        penz+=(time*4)/60;
     }
 
     public void Eves(int valasztottkajataplalekmennyisege)
     {
         kipihentseg -= 0.2;
         fittseg-=0.2;
-        jollakottsag+=valasztottkajataplalekmennyisege;
+        egeszseg+=0.2;
+        jollakottsag+=valasztottkajataplalekmennyisege*0.75;
     }
 
-    public boolean TojasRakas() //egyszerre csak egy tojás lehet lerakva
+    public void DoveActivityChange(int activityID, Date changedTime)
     {
-        if(!VanETojas)
-        {
-            VanETojas = true;
-            return true;
-        }
-        return false;
+
+        long diffInMs = changedTime.getTime() - activityStartedDate;
+        //long diffInSec = TimeUnit.MILLISECONDS.toHours(diffInMs);
+
+        long powerOfChangedTime = diffInMs /(60 * 1000) % 60; //ez lesz az az érték ami meghatározza hogy milyen szintán változnak az egyes propertyk értékei.
+
+    DoveActivityChanger(activityID, powerOfChangedTime);
+
+        activityStartedDate = changedTime.getTime();
+
     }
+
+    private void DoveActivityChanger(int which, long time)
+    {
+        switch (which)
+        {
+            case 0:
+                Alvas(time);
+                break;
+            case 1:
+                Mozgas(time);
+                break;
+            case 2:
+                Tanulas(time);
+                break;
+            case 3:
+                Telefonozas(time);
+                break;
+            case 4:
+                Olvasas(time);
+                break;
+            case 5:
+                Lazulas(time);
+                break;
+            case 6:
+                ZeneHallgatas(time);
+                break;
+            case 7:
+                Dolgozas(time);
+                break;
+        }
+    }
+
 
     public void KajaVasarlas(String nev)
     {
@@ -300,22 +367,9 @@ public class Galamb implements Serializable, Parcelable
         dest.writeDouble(intelligencia);
         dest.writeDouble(kipihentseg);
         dest.writeInt(penz);
-        dest.writeByte((byte) (VanETojas ? 1 : 0));
-        dest.writeString(mitcsinal);
-
-        /*dest.writeInt(kajamennyiseg.size());
-        for (Object s: kajamennyiseg.keySet()) {
-            dest.writeString(String.valueOf(s));
-            dest.writeString((String) kajamennyiseg.get(String.valueOf(s)));
-        }*/
+        dest.writeInt(mitcsinal);
+        dest.writeInt(selectedFood);
+        dest.writeLong(activityStartedDate);
     }
-
-    /*
-    public void readFromParcel(Parcel in) {
-        int count = in.readInt();
-        for (int i = 0; i < count; i++) {
-            kajamennyiseg.put(in.readString(), in.readString());
-        }
-    }*/
 
 }

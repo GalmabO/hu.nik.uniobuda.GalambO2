@@ -29,15 +29,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:background="#54c0ff"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:layout_marginBottom="16dp"/>
 
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/uressav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ar"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
 </RelativeLayout>

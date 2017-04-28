@@ -53,6 +53,23 @@
                     android:layout_height="wrap_content"
                     android:background="@null" />
 
+                <TextView
+                    android:id="@+id/kivalasztottEtelszoveg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/galamb_kep"
+                    android:text="Kiválasztott étel: "
+                    android:layout_gravity="center"
+                    android:textColor="#ffc800" />
+
+                <TextView
+                    android:id="@+id/kivalasztottEtel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/galamb_kep"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/kivalasztottEtelszoveg"
+                    android:textColor="#ffc800" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:layout_width="wrap_content"

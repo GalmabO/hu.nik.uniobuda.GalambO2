@@ -57,7 +57,15 @@ public class PropertyAdapter extends BaseAdapter  {
 
 
         ListItemDataModel tul =  items.get(position);
-        double mennyi = tul.getValue();
+
+        double mennyi=0;
+
+        if( tul.getValue()>=100)
+            mennyi = 99;
+        else if(tul.getValue()<=-100)
+            mennyi = -99;
+        else
+            mennyi = tul.getValue();
 
         mennyi = mennyi + 100;
         ImageView doveArrow = (ImageView)listItemView.findViewById(R.id.doveArrow);

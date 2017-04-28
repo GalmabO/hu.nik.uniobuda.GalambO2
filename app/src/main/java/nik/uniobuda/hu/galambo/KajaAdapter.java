@@ -43,18 +43,18 @@ public class KajaAdapter extends BaseAdapter {
             listItemView= View.inflate(parent.getContext(), R.layout.listitem_food,null);
 
         TextView nevTextView = (TextView) listItemView.findViewById(R.id.nev);
-        TextView tapa = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
+        TextView tapanyagtartalomview = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
 
         TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
 
-        TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
+        //TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
         //Button vetelgomb = (Button) listItemView.findViewById(R.id.vetel);
 
 
         Food food = items.get(position);
 
         nevTextView.setText("Étel neve: "+ food.getNev());
-        tapa.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
+        tapanyagtartalomview.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
         arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
 
 
@@ -63,7 +63,7 @@ public class KajaAdapter extends BaseAdapter {
 //        int w = image.getIntrinsicWidth();
 //        image.setBounds( 0, 0, w, h );
         arTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,image);
-        ures.setText(" ");
+        //ures.setText(" ");
         //vetelgomb.setText("Vásárlás");
         //vetelgomb.setTag(items.get(position).getNev());
 

@@ -64,10 +64,12 @@ public class StoreActivity extends AppCompatActivity {
                 {
                     galamb.KajaVasarlas(melyiketvalasztotta);
                     galamb.setPenz(-valasztott.getAr());
-                    Toast.makeText(this,"sikeres vásárlás",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"Sikeres vásárlás",Toast.LENGTH_LONG).show();
                     jatekospenzview.setText(String.valueOf(galamb.getPenz()));
                     return true;
                 }
+                else
+                    Toast.makeText(this,"Nincs elég pénzed!",Toast.LENGTH_LONG).show();
             }
         }
         return false;
