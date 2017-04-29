@@ -216,80 +216,83 @@ public class Galamb implements Serializable, Parcelable
     public void Alvas(double time)
     {
         if(time < 480) //480--> 80 óra
-            kipihentseg+=(time*2)/60; //8óránál kevesebb alvás
+            kipihentseg+=(time*2)/40; //8óránál kevesebb alvás
         else
         {
-            kipihentseg+=(time*1.5)/60; //túlalvás
-            intelligencia-=(time*0.01)/60; // sok alvástól butább lesz
+            kipihentseg+=(time*1.5)/40; //túlalvás
+            intelligencia-=(time*0.01)/40; // sok alvástól butább lesz
         }
-        fittseg-=(time*0.08)/60; //az alvástól veszéít a fittségéből (kis mennyiségben)
-        jollakottsag-=time/60; // eltelt idővel arányosan lesz éhes
+        fittseg-=(time*0.08)/40; //az alvástól veszéít a fittségéből (kis mennyiségben)
+        jollakottsag-=time/40; // eltelt idővel arányosan lesz éhes
     }
-    public void Mozgas(double time)
+    public void Mozgas(Date changedTime, int step)
     {
-        fittseg +=(time*1.5)/60;
-        kipihentseg -= (time*0.5)/60;
-        kedelyallapot+=(time*0.5)/60;
-        jollakottsag-=time/60;
-        egeszseg+=(time*0.2)/60;
+        long diffInMs = changedTime.getTime() - activityStartedDate;
+        double time = diffInMs /(60 * 5000) % 60;
+
+        fittseg +=(time*1.5)/400+step/5000;
+        kipihentseg -= (time*0.5)/400+step/5000;
+        kedelyallapot+=(time*0.5)/400+step/5000;
+        jollakottsag-=time/400+step/5000;
+        egeszseg+=(time*0.2)/400+step/5000;
     }
 
     public void Tanulas(double time)
     {
-        intelligencia+=(time*2)/60;
+        intelligencia+=(time*2)/40;
         Random rnd = new Random();
-        kedelyallapot+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2)/60; //random hogy jó-e tanulni
-        fittseg-=(time*0.08)/60;
-        kipihentseg -= (time*0.8)/60;
-        jollakottsag-=time/60;
-        penz+=(time)/60;
+        kedelyallapot+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2)/40; //random hogy jó-e tanulni
+        fittseg-=(time*0.08)/40;
+        kipihentseg -= (time*0.8)/40;
+        jollakottsag-=time/40;
+        penz+=(time)/40;
     }
 
     public void Telefonozas(double time)
     {
-        kedelyallapot+=(time*1.01)/60;
+        kedelyallapot+=(time*1.01)/40;
         Random rnd = new Random();
-        intelligencia+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2);
-        fittseg-=(time*0.08)/60;
-        kipihentseg -= (time*0.6)/60;
-        egeszseg-=(time*0.1)/60;
-        jollakottsag-=(time)/60;
+        intelligencia+=(time*rnd.nextInt(3-2)+2-rnd.nextInt(3-2)+2)/40;
+        fittseg-=(time*0.08)/40;
+        kipihentseg -= (time*0.6)/40;
+        egeszseg-=(time*0.1)/40;
+        jollakottsag-=(time)/40;
     }
 
     public void Olvasas(double time)
     {
-        intelligencia+=(time*1.2)/60;
-        kipihentseg -= (time*0.8)/60;
-        fittseg-=(time*0.08)/60;
-        jollakottsag-=(time)/60;
+        intelligencia+=(time*1.2)/40;
+        kipihentseg -= (time*0.8)/40;
+        fittseg-=(time*0.08)/40;
+        jollakottsag-=(time)/40;
     }
 
     public void Lazulas(double time)
     {
-        kedelyallapot += (time*2)/60;
-        kipihentseg -= (time*0.3)/60;
-        fittseg-=(time*0.08)/60;
-        jollakottsag-=(time)/60;
-        egeszseg-=(time*0.1)/60;
+        kedelyallapot += (time*2)/40;
+        kipihentseg -= (time*0.3)/40;
+        fittseg-=(time*0.08)/40;
+        jollakottsag-=(time)/40;
+        egeszseg-=(time*0.1)/40;
     }
 
     public void ZeneHallgatas(double time)
     {
-        kedelyallapot += (time*1.3)/60;
-        kipihentseg -=( time*0.2)/60;
-        fittseg-=(time*0.08)/60;
-        jollakottsag-=(time)/60;
+        kedelyallapot += (time*1.3)/40;
+        kipihentseg -=( time*0.2)/40;
+        fittseg-=(time*0.08)/40;
+        jollakottsag-=(time)/40;
     }
 
     public void Dolgozas(double time)
     {
-        kedelyallapot -= (time*0.5)/60;
-        kipihentseg -=( time*0.5)/60;
-        fittseg-=(time*0.5)/60;
-        egeszseg-=(time*0.1)/60;
-        intelligencia -=(time*0.05)/60;
-        jollakottsag-=(time)/60;
-        penz+=(time*4)/60;
+        kedelyallapot -= (time*0.5)/40;
+        kipihentseg -=( time*0.5)/40;
+        fittseg-=(time*0.5)/40;
+        egeszseg-=(time*0.1)/40;
+        intelligencia -=(time*0.05)/40;
+        jollakottsag-=(time)/40;
+        penz+=(time*4)/40;
     }
 
     public void Eves(int valasztottkajataplalekmennyisege)
@@ -304,8 +307,6 @@ public class Galamb implements Serializable, Parcelable
     {
 
         long diffInMs = changedTime.getTime() - activityStartedDate;
-        //long diffInSec = TimeUnit.MILLISECONDS.toHours(diffInMs);
-
         long powerOfChangedTime = diffInMs /(60 * 1000) % 60; //ez lesz az az érték ami meghatározza hogy milyen szintán változnak az egyes propertyk értékei.
 
     DoveActivityChanger(activityID, powerOfChangedTime);
@@ -320,9 +321,6 @@ public class Galamb implements Serializable, Parcelable
         {
             case 0:
                 Alvas(time);
-                break;
-            case 1:
-                Mozgas(time);
                 break;
             case 2:
                 Tanulas(time);
@@ -349,6 +347,11 @@ public class Galamb implements Serializable, Parcelable
     public void KajaVasarlas(String nev)
     {
         kajamennyiseg.put(nev,(int)kajamennyiseg.get(nev)+1);
+    }
+
+    public void KajaFogyasztas(String nev)
+    {
+        kajamennyiseg.put(nev,(int)kajamennyiseg.get(nev)-1);
     }
 
     @Override

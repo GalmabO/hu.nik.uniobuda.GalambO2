@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,7 +38,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private Galamb galamb;
     private final String FILENAME = "GalambPeldany";
@@ -48,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+
+    //---stepcounter--
+    private SensorManager sensorManager;
+    private boolean stepcounterIsRunning;
+    private int step;
+    Sensor countSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                galamb.DoveActivityChange(galamb.getMitcsinal(), Calendar.getInstance().getTime()); //így realtime a stat
+                TevekenysegValtas(galamb.getMitcsinal());
                 SvipehezBeallitas();
             }
             @Override
@@ -110,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         {
             Feltolt();
         }
-
 
 
         Button button = (Button) findViewById(R.id.gomb);
@@ -161,16 +170,49 @@ public class MainActivity extends AppCompatActivity {
                         "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
                 if(item >= 0)
                 {
-                    galamb.DoveActivityChange(item, Calendar.getInstance().getTime());
-                    galamb.setMitcsinal(item);
-
-                    KepValtas();
+                    TevekenysegValtas(item);
                 }
                 dialog.dismiss();
             }
         });
         AlertDialog alert = alt_bld.create();
         alert.show();
+    }
+
+    private void TevekenysegValtas(int TevekenysegID)
+    {
+        if(galamb.getMitcsinal() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
+        {
+
+            galamb.Mozgas(Calendar.getInstance().getTime(),step);
+            step=0;
+        }
+        if(TevekenysegID ==1)
+        {
+            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (countSensor != null) {
+                stepcounterIsRunning=true;
+                step=0;
+                sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
+            }
+            else
+            {
+                sensorManager = null;
+                countSensor=null;
+                stepcounterIsRunning=false;
+            }
+        }
+        else
+        {
+            sensorManager = null;
+            countSensor=null;
+            stepcounterIsRunning=false;
+            galamb.DoveActivityChange(TevekenysegID, Calendar.getInstance().getTime());
+        }
+        galamb.setMitcsinal(TevekenysegID);
+        KepValtas();
     }
 
     private void KajaDialog()
@@ -265,14 +307,19 @@ public class MainActivity extends AppCompatActivity {
 
         TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
 
-        if(galamb.getSelectedFood() != -1 && 0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
+        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
         {
+
             kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
             Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
             kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
         }
         else
+        {
             kivalasztottkajaText.setText("Nincs kiválasztva étel!");
+            kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+
+        }
 
     }
 
@@ -318,7 +365,36 @@ public class MainActivity extends AppCompatActivity {
             galamb.setKepId(R.drawable.sima_galamb_3);
         }
         galambKep.setImageResource(galamb.getKepId());
+        galambKep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Etetes();
+            }
+        });
+    }
 
+    private void Etetes()
+    {
+        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
+        {
+            Food kaja = Store.getCikkek().get(galamb.getSelectedFood());
+            if((int)galamb.getKajamennyiseg().get(kaja.getNev())>0)
+            {
+                galamb.Eves(kaja.getTapanyagmennyiseg());
+                galamb.KajaFogyasztas(kaja.getNev());
+                Toast.makeText(getApplicationContext(),"nyamm", Toast.LENGTH_SHORT).show();
+
+                if(((int)galamb.getKajamennyiseg().get(kaja.getNev())==0))
+                {
+                    TextView kajatextview = (TextView)findViewById(R.id.kivalasztottEtel);
+                    kajatextview.setText("Nincs kiválasztva étel!");
+                    kajatextview.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+                    galamb.setSelectedFood(-1);
+                    Toast.makeText(getApplicationContext(),"Az étel elfogyott", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
     }
 
     private PropertyAdapter ListaFeltoltesEsAdapterreKonvertalas()
@@ -408,6 +484,8 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Mentes();
     }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -439,16 +517,24 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-     /*@Override
-     protected void onPostCreate(Bundle savedInstanceState) {
-         super.onPostCreate(savedInstanceState);
-         mDrawerToggle.syncState();
-     }*/
-
     void setupDrawerToggle(){
         mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
         //This is necessary to change the icon of the Drawer Toggle upon state change.
         mDrawerToggle.syncState();
+    }
+
+    // --------------------------stepcounter -----------------------------------
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(stepcounterIsRunning)
+        {
+            step++;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
 
