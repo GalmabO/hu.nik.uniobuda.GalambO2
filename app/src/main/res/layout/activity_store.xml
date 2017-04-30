@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="nik.uniobuda.hu.galambo.StoreActivity">
 
 
@@ -16,11 +17,122 @@
         android:textAlignment="center"
         android:background="#afaf37"/>
 
+
     <GridView
         android:id="@+id/araslista"
         android:numColumns="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/jatekospenze"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/jatekospenze"
+        android:layout_weight="2"
+        android:background="@null"/>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/kajaneve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:text="Étel neve: "
+            android:background="#5c436A" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/kajaneveErtek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="#5c436A"
+            android:textColor="#ffaa00"
+            android:layout_toRightOf="@+id/kajaneve"
+            android:layout_marginRight="10dp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/ar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:text="Ár: "
+            android:background="#5c436A"
+            android:layout_toRightOf="@+id/kajaneveErtek" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/arErtek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:background="#5c436A"
+            android:layout_toRightOf="@+id/ar"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tapanyagmennyiseg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:text="Tápanyagmennyiség: "
+            android:background="#5c436A"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tapanyagmennyisegErtek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:background="#5c436A"
+            android:layout_toRightOf="@+id/tapanyagmennyiseg"
+            android:layout_marginRight="10dp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/meglevoMennyiseg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#ffaa00"
+            android:text="Meglévő mennyiség: "
+            android:background="#5c436A"
+            android:layout_toRightOf="@+id/tapanyagmennyisegErtek"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/meglevoMennyisegErtek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="#5c436A"
+            android:textColor="#ffaa00"
+            android:layout_toRightOf="@+id/meglevoMennyiseg"/>
+    </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vásárlás"
+            android:id="@+id/vasarlas" />
+
+
+
+</LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,9 +44,9 @@ public class StoreActivity extends AppCompatActivity {
     }
 
 
-    public boolean Vasarlas(String melyiketvalasztotta)
+    public void Vasarlas(Food valasztott)
     {
-        Food valasztott = null;
+        /*Food valasztott = null;
         
         if(melyiketvalasztotta!=null)
         {
@@ -59,20 +60,20 @@ public class StoreActivity extends AppCompatActivity {
             }
 
             if(valasztott != null)
-            {
+            {*/
                 if(galamb.getPenz() >= valasztott.getAr())
                 {
-                    galamb.KajaVasarlas(melyiketvalasztotta);
+                    galamb.KajaVasarlas(valasztott.getNev());
                     galamb.setPenz(-valasztott.getAr());
                     Toast.makeText(this,"Sikeres vásárlás",Toast.LENGTH_LONG).show();
                     jatekospenzview.setText(String.valueOf(galamb.getPenz()));
-                    return true;
+                    TextView valasztottbolMeglevoMennyisegTextView = (TextView) findViewById(R.id.meglevoMennyisegErtek);
+                    valasztottbolMeglevoMennyisegTextView.setText(String.valueOf((int)galamb.getKajamennyiseg().get(valasztott.getNev())));
                 }
                 else
                     Toast.makeText(this,"Nincs elég pénzed!",Toast.LENGTH_LONG).show();
-            }
-        }
-        return false;
+            //}
+        //}
     }
 
 
@@ -86,11 +87,47 @@ public class StoreActivity extends AppCompatActivity {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Vasarlas(foods.get(position).getNev());
+                //Vasarlas(foods.get(position).getNev());
+                InfoReszAdatFeltoltes(foods.get(position).getNev());
             }
         });
     }
 
+    private void InfoReszAdatFeltoltes(String melyiketvalasztotta)
+    {
+        Food valasztott = null;
+
+        if(melyiketvalasztotta!=null) {
+            for (Food food : foods) {
+                if (food.getNev().equals(melyiketvalasztotta)) {
+                    valasztott = food;
+                    break;
+                }
+            }
+            if(valasztott != null)
+            {
+                final Food kivalasztott = valasztott;
+                TextView valasztottNeveTextView = (TextView) findViewById(R.id.kajaneveErtek);
+                TextView valasztottTapanyagtartalmaTextView = (TextView) findViewById(R.id.tapanyagmennyisegErtek);
+                TextView valasztottAraTextView = (TextView) findViewById(R.id.arErtek);
+                TextView valasztottbolMeglevoMennyisegTextView = (TextView) findViewById(R.id.meglevoMennyisegErtek);
+
+                Button vasarlasButton = (Button)findViewById(R.id.vasarlas);
+
+                valasztottNeveTextView.setText(kivalasztott.getNev());
+                valasztottTapanyagtartalmaTextView.setText(String.valueOf(kivalasztott.getTapanyagmennyiseg()));
+                valasztottAraTextView.setText(String.valueOf(kivalasztott.getAr()));
+                valasztottbolMeglevoMennyisegTextView.setText(String.valueOf((int)galamb.getKajamennyiseg().get(kivalasztott.getNev())));
+
+                vasarlasButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Vasarlas(kivalasztott);
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public void onPause() {

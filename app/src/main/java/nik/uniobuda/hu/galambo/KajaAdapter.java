@@ -43,9 +43,9 @@ public class KajaAdapter extends BaseAdapter {
             listItemView= View.inflate(parent.getContext(), R.layout.listitem_food,null);
 
         TextView nevTextView = (TextView) listItemView.findViewById(R.id.nev);
-        TextView tapanyagtartalomview = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
+        //TextView tapanyagtartalomview = (TextView) listItemView.findViewById(R.id.tapanyagmennyiseg);
 
-        TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
+        //TextView arTextView = (TextView) listItemView.findViewById(R.id.ar);
 
         //TextView ures = (TextView) listItemView.findViewById(R.id.uressav);
         //Button vetelgomb = (Button) listItemView.findViewById(R.id.vetel);
@@ -53,16 +53,17 @@ public class KajaAdapter extends BaseAdapter {
 
         Food food = items.get(position);
 
-        nevTextView.setText("Étel neve: "+ food.getNev());
-        tapanyagtartalomview.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
-        arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
+        nevTextView.setText(food.getNev());
+        //tapanyagtartalomview.setText("Tápanyagtartalma: " + String.valueOf(food.getTapanyagmennyiseg()));
+        //arTextView.setText("Ár: "+ String.valueOf(food.getAr()));
 
 
         Drawable image = appContext.getResources().getDrawable(food.getKepID(),null);
+        nevTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,image);
+
 //        int h = image.getIntrinsicHeight();
 //        int w = image.getIntrinsicWidth();
 //        image.setBounds( 0, 0, w, h );
-        arTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,image);
         //ures.setText(" ");
         //vetelgomb.setText("Vásárlás");
         //vetelgomb.setTag(items.get(position).getNev());
