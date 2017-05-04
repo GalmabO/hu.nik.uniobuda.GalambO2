@@ -1,40 +1,36 @@
 package nik.uniobuda.hu.galambo;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
 /**
  * Created by Adam on 2017. 04. 09..
  */
 
+//Ételt reprezentáló osztály
 public class Food {
-    private String nev;
-    private int tapanyagmennyiseg;
-    private int ar;
-    private int kepID;
+    private String name;
+    private int nutrient; //Tápanyagtartalom
+    private int cost;
+    private int imageID;
 
-    public String getNev() {
-        return nev;
+    public String getName() {
+        return name;
     }
 
-    public int getTapanyagmennyiseg() {
-        return tapanyagmennyiseg;
+    public int getNutrient() {
+        return nutrient;
     }
 
-    public int getAr() {
-        return ar;
+    public int getCost() {
+        return cost;
     }
 
-    public int getKepID() {
-        return kepID;
+    public int getImageID() {
+        return imageID;
     }
 
-
-    public Food(String nev, int tapanyagmennyiseg, int ar, int kepID) {
-        this.nev = nev;
-        this.tapanyagmennyiseg = tapanyagmennyiseg;
-        this.ar = ar;
-        this.kepID = kepID;
+    public Food(String name, int nutrient, int cost, int imageID) {
+        this.name = name;
+        this.nutrient = nutrient;
+        this.cost = cost;
+        this.imageID = imageID;
     }
-
 }

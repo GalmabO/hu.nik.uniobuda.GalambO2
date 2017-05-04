@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,16 +14,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,7 +27,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -62,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_ver2);
 
         mTitle = mDrawerTitle = getTitle();
         mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
@@ -106,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         String input = edittext.getText().toString();
                         if (!input.equals("")) {
                             galamb = new Galamb(input);
-                            TextView text = (TextView) findViewById(R.id.aa) ;
+                            TextView text = (TextView) findViewById(R.id.galambNameTextview) ;
                             text.setText(galamb.getNev());
                             Toast.makeText(MainActivity.this, "Sikeres létrehozás!", Toast.LENGTH_LONG).show();
                             Feltolt(); // Kristóf: ezt azért írtam ide, mert különben csak frissítő gomb nyomására látszik a swipe lista meg a galamb
@@ -122,15 +115,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
 
-        Button button = (Button) findViewById(R.id.gomb);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-             public void onClick(View v) {
-                galamb.setPenz(100);
-            }
-        });
+//        Button button = (Button) findViewById(R.id.gomb);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//             public void onClick(View v) {
+//                galamb.setPenz(100);
+//            }
+//        });
 
-        Button boltgomb = (Button) findViewById(R.id.bolt);
+        Button boltgomb = (Button) findViewById(R.id.OpenStoreActivity);
         boltgomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        Button kajagomb = (Button) findViewById(R.id.kaja);
+        Button kajagomb = (Button) findViewById(R.id.FoodSelectionButton);
         kajagomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        Button tevekenyseggomb = (Button) findViewById(R.id.tevekenyseg);
+        Button tevekenyseggomb = (Button) findViewById(R.id.SelectActivityButton);
         tevekenyseggomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
                         "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
-                TextView tevekenysegTextView = (TextView) findViewById(R.id.kivalasztottTevekenyseg);
+                TextView tevekenysegTextView = (TextView) findViewById(R.id.SelectedActivity);
                 if(item >= 0)
                 {
                     TevekenysegValtas(item);
@@ -222,12 +215,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void KajaDialog()
     {
         List<String> seged = new ArrayList<>();
-        for ( int i = 0; i < Store.getCikkek().size(); i++)
+        for (int i = 0; i < Store.getFoods().size(); i++)
         {
-            if((int)galamb.getKajamennyiseg().get(Store.getCikkek().get(i).getNev()) != 0)
+            if((int)galamb.getKajamennyiseg().get(Store.getFoods().get(i).getName()) != 0)
                 // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
             {
-                seged.add(Store.getCikkek().get(i).getNev());
+                seged.add(Store.getFoods().get(i).getName());
             }
         }
 
@@ -241,24 +234,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alt_bld.setTitle("Étel kiválasztás");
         alt_bld.setSingleChoiceItems(kajaradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                for (int i= 0; i<Store.getCikkek().size();i++)
+                for (int i = 0; i<Store.getFoods().size(); i++)
                 {
-                    if(Store.getCikkek().get(i).getNev().equals(kajaradio[item]))
+                    if(Store.getFoods().get(i).getName().equals(kajaradio[item]))
                     {
 
                         galamb.setSelectedFood(i);
                         break;
                     }
                 }
-                //TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
-                ImageView kajaKep = (ImageView) findViewById(R.id.kajakep);
+                TextView kivalasztottkajaText=(TextView)findViewById(R.id.selecetedFoodTextview);
+                ImageView kajaKep = (ImageView) findViewById(R.id.FoodImageview);
                 if(galamb.getSelectedFood() != -1)
                 {
-                    //kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
+                    kivalasztottkajaText.setText("Kiváálasztott étel: "+
+                            Store.getFoods().get(galamb.getSelectedFood()).getName().toString().trim());
                     //kivalasztottkajaText.setText("");
-                    //Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+                    //Drawable image = getResources().getDrawable(Store.getFoods().get(galamb.getSelectedFood()).getImageID(),null);
                     //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
-                    kajaKep.setImageResource(Store.getCikkek().get(galamb.getSelectedFood()).getKepID());
+                    kajaKep.setImageResource(Store.getFoods().get(galamb.getSelectedFood()).getImageID());
                 }
 
                 dialog.dismiss();
@@ -298,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void Feltolt()
     {
-        TextView nev = (TextView) findViewById(R.id.aa);
+        TextView nev = (TextView) findViewById(R.id.galambNameTextview);
         nev.setText(galamb.getNev());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -312,15 +306,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         SvipehezBeallitas();
 
-        //TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
-        ImageView kajaKep = (ImageView) findViewById(R.id.kajakep);
-        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
+        TextView kivalasztottkajaText=(TextView)findViewById(R.id.selecetedFoodTextview);
+        ImageView kajaKep = (ImageView) findViewById(R.id.FoodImageview);
+        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getFoods().size())
         {
 
-            //kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
-            //Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+            kivalasztottkajaText.setText("Kiválasztott étel: "+
+                    Store.getFoods().get(galamb.getSelectedFood()).getName().toString().trim());
+            //Drawable image = getResources().getDrawable(Store.getFoods().get(galamb.getSelectedFood()).getImageID(),null);
             //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
-            kajaKep.setImageResource(Store.getCikkek().get(galamb.getSelectedFood()).getKepID());
+            kajaKep.setImageResource(Store.getFoods().get(galamb.getSelectedFood()).getImageID());
         }
         else
         {
@@ -333,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void KepValtas()
     {
-        ImageView galambKep = (ImageView) findViewById(R.id.galamb_kep);
+        ImageView galambKep = (ImageView) findViewById(R.id.galambImageView);
         galambKep.setClickable(true);
 
         if (galamb.getMitcsinal() == (0))
@@ -383,18 +378,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void Etetes()
     {
-        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
+        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getFoods().size())
         {
-            Food kaja = Store.getCikkek().get(galamb.getSelectedFood());
-            if((int)galamb.getKajamennyiseg().get(kaja.getNev())>0)
+            Food kaja = Store.getFoods().get(galamb.getSelectedFood());
+            if((int)galamb.getKajamennyiseg().get(kaja.getName())>0)
             {
-                galamb.Eves(kaja.getTapanyagmennyiseg());
-                galamb.KajaFogyasztas(kaja.getNev());
+                galamb.Eves(kaja.getNutrient());
+                galamb.KajaFogyasztas(kaja.getName());
                 Toast.makeText(getApplicationContext(),"nyamm", Toast.LENGTH_SHORT).show();
 
-                if(((int)galamb.getKajamennyiseg().get(kaja.getNev())==0))
+                if(((int)galamb.getKajamennyiseg().get(kaja.getName())==0))
                 {
-                    TextView kajatextview = (TextView)findViewById(R.id.kivalasztottEtel);
+                    TextView kajatextview = (TextView)findViewById(R.id.selecetedFoodTextview);
                     kajatextview.setText("Nincs kiválasztva étel!");
                     kajatextview.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                     galamb.setSelectedFood(-1);

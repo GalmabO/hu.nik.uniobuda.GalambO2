@@ -44,11 +44,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="#ffc020"
-                    android:id="@+id/aa"
+                    android:id="@+id/galambNameTextview"
                     android:textSize="30sp"/>
 
                 <ImageView
-                    android:id="@+id/galamb_kep"
+                    android:id="@+id/galambImageView"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:columnCount="3">
 
                     <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/kivalasztottEtelszoveg"
+                        android:id="@+id/selecetedFoodTextview"
                         android:layout_column="0"
 
                         android:layout_row="0"
@@ -78,7 +78,7 @@
 
 
                     <ImageView
-                        android:id="@+id/kajakep"
+                        android:id="@+id/FoodImageview"
                         android:minHeight="82dp"
                         android:layout_row="0"
                         android:layout_column="1"
@@ -89,7 +89,7 @@
                     <android.support.v7.widget.AppCompatButton
                         android:layout_width="120dp"
                         android:layout_height="50dp"
-                        android:id="@+id/kaja"
+                        android:id="@+id/FoodSelectionButton"
                         android:text="Kaja választás!"
                         android:textColor="#ff8103"
                         android:background="#82f0ff"
@@ -119,7 +119,7 @@
                          android:textColor="#ffc800" />
 
                      <android.support.v7.widget.AppCompatTextView
-                             android:id="@+id/kivalasztottTevekenyseg"
+                             android:id="@+id/SelectedActivity"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:textAlignment="center"
@@ -138,7 +138,7 @@
                          android:layout_column="2"
                          android:layout_columnSpan="1"
                          android:layout_columnWeight="1"
-                         android:id="@+id/tevekenyseg"
+                         android:id="@+id/SelectActivityButton"
                          android:text="Tevékenység választás"
                          android:textColor="#cef9ba"
                          android:background="#5e1e96" />
@@ -150,7 +150,7 @@
                     android:layout_gravity="fill"
                     android:layout_rowWeight="1"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bolt"
+                    android:id="@+id/OpenStoreActivity"
                     android:text="Irány a bolt!"
                     android:textColor="#ffffff"
                     android:background="#28ab31" />
@@ -189,7 +189,7 @@
 
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#6699FF"
@@ -197,17 +197,5 @@
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp" />
 
-    <!--<GridView
-        android:id="@+id/lista"
-        android:numColumns="1"
-        android:minHeight="1dp"
-        android:minWidth="1dp"
-        android:gravity="start"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:layout_width="wrap_content"
-        android:choiceMode="singleChoice"
-        android:layout_height="match_parent"/>
--->
 
 </android.support.v4.widget.DrawerLayout>
