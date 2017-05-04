@@ -21,6 +21,8 @@
             layout="@layout/toolbar" />
     </LinearLayout>
 
+
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/content_frame"
@@ -32,6 +34,7 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="nik.uniobuda.hu.galambo.MainActivity"
             android:background="#5c436A">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -40,51 +43,133 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_centerHorizontal="true"
                     android:textColor="#ffc020"
                     android:id="@+id/aa"
                     android:textSize="30sp"/>
 
                 <ImageView
                     android:id="@+id/galamb_kep"
-                    android:layout_weight="2"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null" />
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:rowCount="1"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:columnCount="3">
+
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/kivalasztottEtelszoveg"
+                        android:layout_column="0"
+
+                        android:layout_row="0"
+                        android:layout_columnSpan="1"
+                        android:layout_columnWeight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Kiválasztott étel: "
-                        android:textAlignment="center"
-                        android:layout_gravity="center"
+                        android:textAlignment="textStart"
                         android:textColor="#ffc800" />
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/kivalasztottEtel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textAlignment="center"
-                        android:layout_toRightOf="@id/kivalasztottEtelszoveg"
-                        android:textColor="#ffc800" />
-                </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/kajakep"
+                        android:minHeight="82dp"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_columnSpan="1"
+                        android:minWidth="51dp"/>
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:layout_width="120dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/kaja"
+                        android:text="Kaja választás!"
+                        android:textColor="#ff8103"
+                        android:background="#82f0ff"
+                        android:layout_column="2"
+                        android:layout_row="0"
+                        android:layout_columnSpan="1" />
+                </GridLayout>
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:rowCount="1"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:columnCount="3">
+
+                     <android.support.v7.widget.AppCompatTextView
+                         android:id="@+id/kivalasztottTevekenysegszoveg"
+                         android:layout_column="0"
+                         android:layout_row="0"
+                         android:layout_columnWeight="1"
+                         android:layout_width="wrap_content"
+                         android:layout_columnSpan="1"
+                         android:layout_height="wrap_content"
+                         android:text="Aktuális tevékenység: "
+                         android:textAlignment="textStart"
+                         android:textColor="#ffc800" />
+
+                     <android.support.v7.widget.AppCompatTextView
+                             android:id="@+id/kivalasztottTevekenyseg"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:textAlignment="center"
+                             android:layout_row="0"
+                             android:layout_columnWeight="1"
+                             android:layout_columnSpan="1"
+                             android:layout_column="1"
+                             android:minWidth="51dp"
+                             android:textSize="16sp"
+                             android:textColor="#C8AFDE" />
+
+                     <android.support.v7.widget.AppCompatButton
+                         android:layout_width="110dp"
+                         android:layout_height="50dp"
+                         android:layout_row="0"
+                         android:layout_column="2"
+                         android:layout_columnSpan="1"
+                         android:layout_columnWeight="1"
+                         android:id="@+id/tevekenyseg"
+                         android:text="Tevékenység választás"
+                         android:textColor="#cef9ba"
+                         android:background="#5e1e96" />
+                </GridLayout>
+
 
                 <android.support.v7.widget.AppCompatButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="fill"
+                    android:layout_rowWeight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bolt"
+                    android:text="Irány a bolt!"
+                    android:textColor="#ffffff"
+                    android:background="#28ab31" />
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/gomb"
                     android:layout_gravity="center"
                     android:text="Nyomj meg"
                     android:textColor="#ffffff"
-                    android:background="#FF0000"
-                    android:layout_below="@id/aa"
-                    android:layout_centerHorizontal="true"/>
+                    android:background="#FF0000" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/kivalasztottEtel"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible"
+                    android:textColor="#ffc800" />
+
+                <!--  -->
 
                 <!-- <android.support.v7.widget.AppCompatButton
                     android:layout_width="wrap_content"
@@ -97,38 +182,6 @@
                     android:layout_below="@id/gomb"
                     android:layout_centerHorizontal="true"/> -->
 
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/bolt"
-                    android:text="Irány a bolt!"
-                    android:textColor="#ffffff"
-                    android:background="#28ab31"
-                    android:layout_below="@id/gomb"
-                    android:layout_centerHorizontal="true"/>
-
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/kaja"
-                    android:text="Kaja választás!"
-                    android:textColor="#ff8103"
-                    android:background="#82f0ff"
-                    android:layout_below="@id/bolt"
-                    android:layout_centerHorizontal="true"/>
-
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:id="@+id/tevekenyseg"
-                    android:text="Tevékenység választás"
-                    android:textColor="#cef9ba"
-                    android:background="#5e1e96"
-                    android:layout_below="@id/kaja"
-                    android:layout_centerHorizontal="true"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

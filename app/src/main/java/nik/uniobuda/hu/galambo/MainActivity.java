@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Button button = (Button) findViewById(R.id.gomb);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+             public void onClick(View v) {
                 galamb.setPenz(100);
             }
         });
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boltgomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BoltActivityMegnyitas();
+            BoltActivityMegnyitas();
             }
         });
 
@@ -168,10 +168,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
                         "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
+                TextView tevekenysegTextView = (TextView) findViewById(R.id.kivalasztottTevekenyseg);
                 if(item >= 0)
                 {
                     TevekenysegValtas(item);
+
                 }
+
+                tevekenysegTextView.setText(galamb.ezeketcsinalhatja[galamb.getMitcsinal()]);
                 dialog.dismiss();
             }
         });
@@ -246,12 +250,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         break;
                     }
                 }
-                TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
+                //TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
+                ImageView kajaKep = (ImageView) findViewById(R.id.kajakep);
                 if(galamb.getSelectedFood() != -1)
                 {
-                    kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
-                    Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
-                    kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+                    //kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
+                    //kivalasztottkajaText.setText("");
+                    //Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+                    //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+                    kajaKep.setImageResource(Store.getCikkek().get(galamb.getSelectedFood()).getKepID());
                 }
 
                 dialog.dismiss();
@@ -305,19 +312,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         SvipehezBeallitas();
 
-        TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
-
+        //TextView kivalasztottkajaText=(TextView)findViewById(R.id.kivalasztottEtel);
+        ImageView kajaKep = (ImageView) findViewById(R.id.kajakep);
         if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getCikkek().size())
         {
 
-            kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
-            Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
-            kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+            //kivalasztottkajaText.setText(Store.getCikkek().get(galamb.getSelectedFood()).getNev().toString());
+            //Drawable image = getResources().getDrawable(Store.getCikkek().get(galamb.getSelectedFood()).getKepID(),null);
+            //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
+            kajaKep.setImageResource(Store.getCikkek().get(galamb.getSelectedFood()).getKepID());
         }
         else
         {
-            kivalasztottkajaText.setText("Nincs kiválasztva étel!");
-            kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+            //kivalasztottkajaText.setText("Nincs kiválasztva étel!");
+            //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
 
         }
 
