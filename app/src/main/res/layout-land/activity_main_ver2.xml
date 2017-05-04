@@ -17,17 +17,35 @@
     </LinearLayout>
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:id="@+id/content_frame"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/Purple_medium"-->
+        <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+        <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
+        <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+        <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+        <!--tools:context="nik.uniobuda.hu.galambo.MainActivity">-->
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Purple_medium"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="nik.uniobuda.hu.galambo.MainActivity"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:background="@color/Purple_medium"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="nik.uniobuda.hu.galambo.MainActivity">
+        android:layout_width="match_parent"
+        android:layout_gravity="fill">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/galambNameTextview"
@@ -56,30 +74,35 @@
             android:id="@+id/galambImageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_below="@id/galambLevelTextview"
             android:layout_centerHorizontal="true"
             android:background="@null"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:layout_below="@id/galambLevelTextview"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_columnWeight="0.5"
+        android:layout_gravity="fill"
+        android:layout_weight="1">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/selecetedFoodTextview"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:textSize="16sp"
-            android:layout_below="@id/galambImageView"
-            android:layout_columnWeight="1"
             android:text="Kiválasztott étel: "
             android:textColor="@color/sand"
+            android:gravity="center"
             android:layout_marginRight="30dp"
-            android:gravity="center"/>
-
+            />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/FoodImageview"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_below="@id/galambImageView"
-            android:layout_columnWeight="1"
             android:layout_toEndOf="@id/selecetedFoodTextview" />
 
         <android.support.v7.widget.AppCompatButton
@@ -123,7 +146,10 @@
             android:textColor="@color/Purple_medium"
             android:layout_below="@id/SelectActivityButton"/>
 
-    </RelativeLayout>
+        </RelativeLayout>
+</LinearLayout>
+
+    <!--</RelativeLayout>-->
 
     <ListView
         android:id="@+id/left_drawer"
