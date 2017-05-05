@@ -17,7 +17,7 @@
     </LinearLayout>
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -27,71 +27,46 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
         tools:context="nik.uniobuda.hu.galambo.MainActivity">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/galambNameTextview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/sand"
-            android:textSize="30sp" />
+        <!--Mert a név meg a nyíl egymás mellett vannak-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/arrow"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/galambNameTextview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sand"
+                android:gravity="center_horizontal"
+                android:textSize="30sp" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/arrow"/>
+
+        </RelativeLayout>
+
 
         <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/galambLevelTextview"
             android:text="Szint"
-            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_below="@id/galambNameTextview"
             android:textColor="@color/sand"/>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/galambImageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_below="@id/galambLevelTextview"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:layout_marginBottom="16dp"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/selecetedFoodTextview"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textSize="16sp"
-            android:layout_below="@id/galambImageView"
-            android:layout_columnWeight="1"
-            android:text="Kiválasztott étel: "
-            android:textColor="@color/sand"
-            android:layout_marginRight="30dp"
-            android:gravity="center"/>
-
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/FoodImageview"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/galambImageView"
-            android:layout_columnWeight="1"
-            android:layout_toEndOf="@id/selecetedFoodTextview" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/FoodSelectionButton"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/FoodImageview"
-            android:background="@color/sand"
-            android:text="Kaja választás!"
-            android:textColor="@color/Purple_medium"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_weight="1"
+            android:background="@null"
+            android:layout_marginBottom="8dp"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/SelectedActivity"
@@ -99,8 +74,42 @@
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
             android:textColor="@color/sand"
-            android:textSize="16sp"
-            android:layout_below="@id/FoodSelectionButton"/>
+            android:textSize="16sp" />
+
+        <!--Mert a kiválasztott kaja meg a kép egymás mellett vannak-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/selecetedFoodTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:textSize="16sp"
+                android:layout_columnWeight="1"
+                android:text="Kiválasztott étel: "
+                android:textColor="@color/sand"
+                android:layout_marginRight="30dp"
+                android:gravity="center"/>
+
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/FoodImageview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_columnWeight="1"
+                android:layout_toEndOf="@id/selecetedFoodTextview" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/FoodSelectionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sand"
+            android:text="Kaja választás!"
+            android:textColor="@color/Purple_medium"
+            android:layout_marginTop="16dp"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/SelectActivityButton"
@@ -109,7 +118,6 @@
             android:background="@color/sand"
             android:text="Tevékenység választás"
             android:textColor="@color/Purple_medium"
-            android:layout_below="@id/SelectedActivity"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"/>
 
@@ -120,10 +128,9 @@
             android:layout_gravity="fill"
             android:background="@color/sand"
             android:text="Irány a bolt!"
-            android:textColor="@color/Purple_medium"
-            android:layout_below="@id/SelectActivityButton"/>
+            android:textColor="@color/Purple_medium"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/left_drawer"
