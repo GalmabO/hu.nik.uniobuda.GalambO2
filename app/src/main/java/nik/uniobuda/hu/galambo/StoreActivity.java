@@ -45,9 +45,7 @@ public class StoreActivity extends AppCompatActivity {
         //kaja lsita betöltés
         LoadFoodsIntoGrodView();
 
-        galamb = (Galamb) getIntent().getExtras().get("galamb");
-        HashMap FoodHashMap = (HashMap) getIntent().getExtras().get("dictionary");
-        galamb.setKajamennyiseg(FoodHashMap);
+        galamb = (Galamb) getIntent().getSerializableExtra("galamb");
         playerMoneyText.setText(String.valueOf(galamb.getPenz()));
 
         //Vissza nyílra ugyanazt csinálja mint a rendes vissza gombra
@@ -118,10 +116,7 @@ public class StoreActivity extends AppCompatActivity {
     //Csinál egy intentet, beleteszi a galambot, és az ételmennyiség hashsetet
     Intent CreateIntentForSave() {
         Intent intent = new Intent();
-        Bundle extras = new Bundle();
-        extras.putParcelable("result", galamb);
-        extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
-        intent.putExtras(extras);
+        intent.putExtra("galamb",galamb);
         return intent;
     }
 

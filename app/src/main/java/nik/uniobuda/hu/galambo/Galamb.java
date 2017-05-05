@@ -15,7 +15,7 @@ import java.util.*;
  */
 
 //A nevelgetett galambunkat reprezentáló osztály
-public class Galamb implements Serializable, Parcelable {
+public class Galamb implements Serializable  {
     private int teljesSzint;
 
     private String nev;
@@ -29,6 +29,7 @@ public class Galamb implements Serializable, Parcelable {
     private double intelligencia;
     private double kipihentseg;
 
+
     static final String[] ezeketcsinalhatja = new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
 
     private int mitcsinal;
@@ -38,35 +39,12 @@ public class Galamb implements Serializable, Parcelable {
     public static final int ENNYIPROPERTYVAN = 6;
 
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
-    private HashMap kajamennyiseg;
+    private HashMap<String ,Integer> kajamennyiseg;
 
     private int selectedFood;
 
+    int a = 5;
     private int penz;
-
-    protected Galamb(Parcel in) {
-
-
-        teljesSzint = in.readInt();
-        nev = in.readString();
-        egeszseg = in.readDouble();
-        fittseg = in.readDouble();
-        jollakottsag = in.readDouble();
-        kedelyallapot = in.readDouble();
-        intelligencia = in.readDouble();
-        kipihentseg = in.readDouble();
-        penz = in.readInt();
-
-        mitcsinal = in.readInt();
-
-        selectedFood = in.readInt();
-
-        activityStartedDate = in.readLong();
-
-        kajamennyiseg = new HashMap();
-
-        KajamennyisegIni();
-    }
 
 
     public Galamb(String nev) {
@@ -86,18 +64,6 @@ public class Galamb implements Serializable, Parcelable {
         KajamennyisegIni();
     }
 
-
-    public static final Creator<Galamb> CREATOR = new Creator<Galamb>() {
-        @Override
-        public Galamb createFromParcel(Parcel in) {
-            return new Galamb(in);
-        }
-
-        @Override
-        public Galamb[] newArray(int size) {
-            return new Galamb[size];
-        }
-    };
 
     public String getNev() {
         return nev;
@@ -202,7 +168,7 @@ public class Galamb implements Serializable, Parcelable {
     private void KajamennyisegIni() {
         List<Food> seged = Store.getFoods();
         for (int i = 0; i < seged.size(); i++) {
-            kajamennyiseg.put(seged.get(i).getName(), 0);
+            kajamennyiseg.put(seged.get(i).getName(),0);
         }
     }
 
@@ -333,26 +299,4 @@ public class Galamb implements Serializable, Parcelable {
     public void KajaFogyasztas(String nev) {
         kajamennyiseg.put(nev, (int) kajamennyiseg.get(nev) - 1);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(teljesSzint);
-        dest.writeString(nev);
-        dest.writeDouble(egeszseg);
-        dest.writeDouble(fittseg);
-        dest.writeDouble(jollakottsag);
-        dest.writeDouble(kedelyallapot);
-        dest.writeDouble(intelligencia);
-        dest.writeDouble(kipihentseg);
-        dest.writeInt(penz);
-        dest.writeInt(mitcsinal);
-        dest.writeInt(selectedFood);
-        dest.writeLong(activityStartedDate);
-    }
-
 }
