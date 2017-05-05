@@ -4,135 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Purple_medium"
     android:orientation="vertical"
     tools:context="nik.uniobuda.hu.galambo.StoreActivity">
 
+    <!--Felső sáv (visszí nyíl, bolt felirat, pénz, érme képe)-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/Purple_medium">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/goBackImageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_mirrored" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Bolt"
+            android:textColor="@color/sand"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/coinDrawableImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="8dp"
+            android:src="@drawable/coin" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/playerMoneyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/coinDrawableImageView"
+            android:background="@color/Purple_medium"
+            android:textColor="@color/sand"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <!--A kaják listája-->
+    <GridView
+        android:id="@+id/ListOfFoodsAndPics"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/Purple_medium" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/jatekospenze"
+        android:layout_marginTop="8dp"
+        android:id="@+id/SelectedFoodDetailsTextview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/Purple_medium"
+        android:enabled="true"
+        android:gravity="center"
+        android:text="Válassz ki egy ételt!"
+        android:textColor="@color/sand"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:background="#afaf37"/>
+        android:textStyle="bold" />
 
-
-    <GridView
-        android:id="@+id/araslista"
-        android:numColumns="1"
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/BuySelectedFoodButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/jatekospenze"
-        android:layout_weight="2"
-        android:background="@null"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/kajaneve"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:text="Étel neve: "
-            android:background="#5c436A" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/kajaneveErtek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:background="#5c436A"
-            android:textColor="#ffaa00"
-            android:layout_toRightOf="@+id/kajaneve"
-            android:layout_marginRight="10dp"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/ar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:text="Ár: "
-            android:background="#5c436A"
-            android:layout_toRightOf="@+id/kajaneveErtek" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/arErtek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:background="#5c436A"
-            android:layout_toRightOf="@+id/ar"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tapanyagmennyiseg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:text="Tápanyagmennyiség: "
-            android:background="#5c436A"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tapanyagmennyisegErtek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:background="#5c436A"
-            android:layout_toRightOf="@+id/tapanyagmennyiseg"
-            android:layout_marginRight="10dp"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/meglevoMennyiseg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="#ffaa00"
-            android:text="Meglévő mennyiség: "
-            android:background="#5c436A"
-            android:layout_toRightOf="@+id/tapanyagmennyisegErtek"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/meglevoMennyisegErtek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:background="#5c436A"
-            android:textColor="#ffaa00"
-            android:layout_toRightOf="@+id/meglevoMennyiseg"/>
-    </RelativeLayout>
-
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Vásárlás"
-            android:id="@+id/vasarlas" />
-
-
+        android:layout_margin="8dp"
+        android:background="@color/sand"
+        android:text="Vásárlás"
+        android:textColor="@color/Purple_medium" />
 
 </LinearLayout>
