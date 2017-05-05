@@ -29,7 +29,7 @@ public class Galamb implements Serializable, Parcelable {
     private double intelligencia;
     private double kipihentseg;
 
-    static final String[] ezeketcsinalhatja = new String[]{"alvás", "mozgás", "tanulás", "telefonozás", "olvasás", "lazulás", "zenehallgatás", "dolgozás"};
+    static final String[] ezeketcsinalhatja = new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
 
     private int mitcsinal;
 
@@ -78,7 +78,7 @@ public class Galamb implements Serializable, Parcelable {
         this.jollakottsag = 0;
         this.kedelyallapot = 0;
         this.kipihentseg = 0;
-        penz = 0;
+        penz = 200; //ajándék
         mitcsinal = 0;
         activityStartedDate = Calendar.getInstance().getTime().getTime();
         selectedFood = -1;

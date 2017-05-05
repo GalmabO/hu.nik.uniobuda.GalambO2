@@ -24,7 +24,7 @@ public class StoreActivity extends AppCompatActivity {
     private TextView detailsTextview;
     ImageView goBackView;
     Button vasarlasButton;
-    Food selectedFood;
+    Food selectedFood; //A gridviewból éppen kiválasztott kaja
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class StoreActivity extends AppCompatActivity {
         goBackView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                PauseOrBack();
             }
         });
 
@@ -104,18 +104,14 @@ public class StoreActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        Intent intent = CreateIntentForSave();
-        this.setResult(RESULT_OK, intent);
-        finish();
+        PauseOrBack();
         super.onPause();
     }
 
     //Vissza gomb nyomásra
     @Override
     public void onBackPressed() {
-        Intent intent = CreateIntentForSave();
-        this.setResult(RESULT_OK, intent);
-        finish();
+        PauseOrBack();
         super.onBackPressed();
     }
 
@@ -127,6 +123,13 @@ public class StoreActivity extends AppCompatActivity {
         extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
         intent.putExtras(extras);
         return intent;
+    }
+
+    void PauseOrBack()
+    {
+        Intent intent = CreateIntentForSave();
+        this.setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void LoadFoodsIntoGrodView() {

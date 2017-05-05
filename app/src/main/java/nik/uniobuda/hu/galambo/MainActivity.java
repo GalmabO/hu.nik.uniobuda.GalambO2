@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,11 +34,16 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private Galamb galamb;
     private final String FILENAME = "GalambPeldany";
+    SparseIntArray ImagesToActivities;
 
+    //Felület:
+    TextView kivalasztottkajaText;
+    ImageView FoodImageView;
+    ImageView galambKep;
 
     // következők a swipe-barhoz tartozó cuccok
     private String[] mNavigationDrawerItemTitles;
@@ -59,75 +66,91 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main_ver2);
 
         mTitle = mDrawerTitle = getTitle();
-        mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
+        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        //mintha hashmap lenne csak optimálisabb
+        ImagesToActivities = new SparseIntArray();
+        ImagesToActivities.put(0, R.drawable.alszik);
+        ImagesToActivities.put(1, R.drawable.sportol);
+        ImagesToActivities.put(2, R.drawable.tanul);
+        ImagesToActivities.put(3, R.drawable.telefonozik);
+        ImagesToActivities.put(4, R.drawable.olvas);
+        ImagesToActivities.put(5, R.drawable.lazul);
+        ImagesToActivities.put(6, R.drawable.zenethallgat);
+        ImagesToActivities.put(7, R.drawable.dolgozas);
+
+        //Felület elemeinek elérése
+        kivalasztottkajaText = (TextView) findViewById(R.id.selecetedFoodTextview);
+        FoodImageView = (ImageView) findViewById(R.id.FoodImageview);
+        galambKep = (ImageView) findViewById(R.id.galambImageView);
+        galambKep.setClickable(true);
+
+        //képre toutcholva etetünk
+        galambKep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EatSomeFood();
+            }
+        });
 
         setupToolbar();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) { }
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 TevekenysegValtas(galamb.getMitcsinal());
                 SvipehezBeallitas();
             }
-            @Override
-            public void onDrawerClosed(View drawerView) { }
 
             @Override
-            public void onDrawerStateChanged(int newState) { }
+            public void onDrawerClosed(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
         });
 
-        Betoltes();
+        //Tárhelyről betölti, ha ezután null akkor új galambot kell csinálni
+        LoadFromStorage();
 
-        if(galamb == null)
-        {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Galamb létrehozás");
-                alert.setMessage("Add meg a galambod nevét!");
+        //region Létrehozás ha nem létezik
+        if (galamb == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Galamb létrehozás");
+            alert.setMessage("Add meg a galambod nevét:");
+            final EditText edittext = new EditText(this);
+            //Egy edittext lesz a dialogban
+            alert.setView(edittext);
 
-
-                final EditText edittext = new EditText(this);
-
-                alert.setView(edittext);
-
-                alert.setPositiveButton("Létrehozás", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String input = edittext.getText().toString();
-                        if (!input.equals("")) {
-                            galamb = new Galamb(input);
-                            TextView text = (TextView) findViewById(R.id.galambNameTextview) ;
-                            text.setText(galamb.getNev());
-                            Toast.makeText(MainActivity.this, "Sikeres létrehozás!", Toast.LENGTH_LONG).show();
-                            Feltolt(); // Kristóf: ezt azért írtam ide, mert különben csak frissítő gomb nyomására látszik a swipe lista meg a galamb
-                            Mentes();
-                        }
+            alert.setPositiveButton("Létrehozás", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String input = edittext.getText().toString().trim();
+                    if (!input.equals("")) {
+                        galamb = new Galamb(input);
+                        Toast.makeText(MainActivity.this, "Sikeres létrehozás!", Toast.LENGTH_SHORT).show();
+                        LoadLayoutElementsOnStart();
+                        SaveToStorage();
                     }
-                });
-                alert.show();
+                }
+            });
+            alert.show();
+        } else {
+            LoadLayoutElementsOnStart();
         }
-        else
-        {
-            Feltolt();
-        }
-
-
-//        Button button = (Button) findViewById(R.id.gomb);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//             public void onClick(View v) {
-//                galamb.setPenz(100);
-//            }
-//        });
+        //endregion
 
         Button boltgomb = (Button) findViewById(R.id.OpenStoreActivity);
         boltgomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            BoltActivityMegnyitas();
+                BoltActivityMegnyitas();
             }
         });
 
@@ -146,24 +169,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 TevekenysegDialog();
             }
         });
-
     }
 
-    private void TevekenysegDialog()
-    {
-        final CharSequence[] tevekenysegradio= new CharSequence[Galamb.ezeketcsinalhatja.length];
-        for ( int i = 0; i < Galamb.ezeketcsinalhatja.length; i++) {
-            tevekenysegradio[i]=Galamb.ezeketcsinalhatja[i];
+    private void TevekenysegDialog() {
+        final CharSequence[] tevekenysegradio = new CharSequence[Galamb.ezeketcsinalhatja.length];
+        for (int i = 0; i < Galamb.ezeketcsinalhatja.length; i++) {
+            tevekenysegradio[i] = Galamb.ezeketcsinalhatja[i];
         }
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
         alt_bld.setTitle("Tevékenység kiválasztás");
         alt_bld.setSingleChoiceItems(tevekenysegradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Toast.makeText(getApplicationContext(),
-                        "A kiválasztott tevékenység: "+tevekenysegradio[item], Toast.LENGTH_SHORT).show();
-                TextView tevekenysegTextView = (TextView) findViewById(R.id.SelectedActivity);
-                if(item >= 0)
-                {
+                        "A kiválasztott tevékenység: " + tevekenysegradio[item], Toast.LENGTH_SHORT).show();
+                TextView tevekenysegTextView = (TextView) findViewById(R.id.selectActivity);
+                if (item >= 0) {
                     TevekenysegValtas(item);
 
                 }
@@ -176,57 +196,49 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alert.show();
     }
 
-    private void TevekenysegValtas(int TevekenysegID)
-    {
-        if(galamb.getMitcsinal() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
+    private void TevekenysegValtas(int TevekenysegID) {
+        if (galamb.getMitcsinal() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
         {
 
-            galamb.Mozgas(Calendar.getInstance().getTime(),step);
-            step=0;
+            galamb.Mozgas(Calendar.getInstance().getTime(), step);
+            step = 0;
         }
-        if(TevekenysegID ==1)
-        {
+        if (TevekenysegID == 1) {
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (countSensor != null) {
-                stepcounterIsRunning=true;
-                step=0;
+                stepcounterIsRunning = true;
+                step = 0;
                 sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
-            }
-            else
-            {
+            } else {
                 sensorManager = null;
-                countSensor=null;
-                stepcounterIsRunning=false;
+                countSensor = null;
+                stepcounterIsRunning = false;
             }
-        }
-        else
-        {
+        } else {
             sensorManager = null;
-            countSensor=null;
-            stepcounterIsRunning=false;
+            countSensor = null;
+            stepcounterIsRunning = false;
             galamb.DoveActivityChange(TevekenysegID, Calendar.getInstance().getTime());
         }
         galamb.setMitcsinal(TevekenysegID);
         KepValtas();
     }
 
-    private void KajaDialog()
-    {
+    private void KajaDialog() {
         List<String> seged = new ArrayList<>();
-        for (int i = 0; i < Store.getFoods().size(); i++)
-        {
-            if((int)galamb.getKajamennyiseg().get(Store.getFoods().get(i).getName()) != 0)
-                // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
+        for (int i = 0; i < Store.getFoods().size(); i++) {
+            if ((int) galamb.getKajamennyiseg().get(Store.getFoods().get(i).getName()) != 0)
+            // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
             {
                 seged.add(Store.getFoods().get(i).getName());
             }
         }
 
-        final CharSequence[] kajaradio= new CharSequence[seged.size()];
-        for ( int i = 0; i < seged.size(); i++) {
-            kajaradio[i]=seged.get(i);
+        final CharSequence[] kajaradio = new CharSequence[seged.size()];
+        for (int i = 0; i < seged.size(); i++) {
+            kajaradio[i] = seged.get(i);
         }
 
 
@@ -234,20 +246,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alt_bld.setTitle("Étel kiválasztás");
         alt_bld.setSingleChoiceItems(kajaradio, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                for (int i = 0; i<Store.getFoods().size(); i++)
-                {
-                    if(Store.getFoods().get(i).getName().equals(kajaradio[item]))
-                    {
+                for (int i = 0; i < Store.getFoods().size(); i++) {
+                    if (Store.getFoods().get(i).getName().equals(kajaradio[item])) {
 
                         galamb.setSelectedFood(i);
                         break;
                     }
                 }
-                TextView kivalasztottkajaText=(TextView)findViewById(R.id.selecetedFoodTextview);
+                TextView kivalasztottkajaText = (TextView) findViewById(R.id.selecetedFoodTextview);
                 ImageView kajaKep = (ImageView) findViewById(R.id.FoodImageview);
-                if(galamb.getSelectedFood() != -1)
-                {
-                    kivalasztottkajaText.setText("Kiváálasztott étel: "+
+                if (galamb.getSelectedFood() != -1) {
+                    kivalasztottkajaText.setText("Kiváálasztott étel: " +
                             Store.getFoods().get(galamb.getSelectedFood()).getName().toString().trim());
                     //kivalasztottkajaText.setText("");
                     //Drawable image = getResources().getDrawable(Store.getFoods().get(galamb.getSelectedFood()).getImageID(),null);
@@ -263,18 +272,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alert.show();
 
 
-
     }
 
-    private void BoltActivityMegnyitas()
-    {
-        Intent intent = new Intent(MainActivity.this,StoreActivity.class);
+    private void BoltActivityMegnyitas() {
+        Intent intent = new Intent(MainActivity.this, StoreActivity.class);
         Bundle extras = new Bundle();
         extras.putParcelable("galamb", galamb);
         extras.putSerializable("dictionary", (Serializable) galamb.getKajamennyiseg());
         intent.putExtras(extras);
         this.startActivityForResult(intent, 1);
-
     }
 
     @Override
@@ -282,126 +288,86 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
-            if(resultCode == RESULT_OK){
-                galamb = (Galamb)data.getParcelableExtra("result");
+            if (resultCode == RESULT_OK) {
+                galamb = (Galamb) data.getParcelableExtra("result");
                 galamb.setKajamennyiseg((HashMap) data.getSerializableExtra("dictionary"));
-                Mentes();
+                SaveToStorage();
             }
         }
     }
 
-    private void Feltolt()
-    {
+    private void LoadLayoutElementsOnStart() {
         TextView nev = (TextView) findViewById(R.id.galambNameTextview);
         nev.setText(galamb.getNev());
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
-
+        TextView actualActivity = (TextView) findViewById(R.id.selectActivity);
+        actualActivity.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getMitcsinal()]);
         KepValtas();
-
+        SelectedFoodShow();
         PropertyAdapter adapter = ListaFeltoltesEsAdapterreKonvertalas();
-        ListView lista = (ListView) findViewById(R.id.left_drawer);
-        lista.setAdapter(adapter);
-
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
+        listView.setAdapter(adapter);
         SvipehezBeallitas();
-
-        TextView kivalasztottkajaText=(TextView)findViewById(R.id.selecetedFoodTextview);
-        ImageView kajaKep = (ImageView) findViewById(R.id.FoodImageview);
-        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getFoods().size())
-        {
-
-            kivalasztottkajaText.setText("Kiválasztott étel: "+
-                    Store.getFoods().get(galamb.getSelectedFood()).getName().toString().trim());
-            //Drawable image = getResources().getDrawable(Store.getFoods().get(galamb.getSelectedFood()).getImageID(),null);
-            //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,image,null);
-            kajaKep.setImageResource(Store.getFoods().get(galamb.getSelectedFood()).getImageID());
-        }
-        else
-        {
-            //kivalasztottkajaText.setText("Nincs kiválasztva étel!");
-            //kivalasztottkajaText.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
-
-        }
-
     }
 
-    private void KepValtas()
-    {
-        ImageView galambKep = (ImageView) findViewById(R.id.galambImageView);
-        galambKep.setClickable(true);
+    //Kiválasztott étel megjelenítése
+    void SelectedFoodShow() {
+        if (0 <= galamb.getSelectedFood() && galamb.getSelectedFood() <= Store.getFoods().size()) {
+            String text =
+                    "Kiválasztott étel: "
+                            + Store.getFoods().get(galamb.getSelectedFood()).getName().toString().trim();
+            kivalasztottkajaText.setText(text);
+            FoodImageView.setImageResource(Store.getFoods().get(galamb.getSelectedFood()).getImageID());
+        } else {
+            kivalasztottkajaText.setText("Nincs kiválasztva étel!");
+            FoodImageView.setImageDrawable(null);
+        }
+    }
 
-        if (galamb.getMitcsinal() == (0))
-        {
-            galamb.setKepId(R.drawable.alszik);
-        }
-        else if(galamb.getMitcsinal() == 1)
-        {
-            galamb.setKepId(R.drawable.sportol);
-        }
-        else if(galamb.getMitcsinal()== 2)
-        {
-            galamb.setKepId(R.drawable.tanul);
-        }
-        else if(galamb.getMitcsinal() == 3 )
-        {
-            galamb.setKepId(R.drawable.telefonozik);
-        }
-        else if(galamb.getMitcsinal() == 4)
-        {
-            galamb.setKepId(R.drawable.olvas);
-        }
-        else if(galamb.getMitcsinal() == 5)
-        {
-            galamb.setKepId(R.drawable.lazul);
-        }
-        else if(galamb.getMitcsinal() == 6)
-        {
-            galamb.setKepId(R.drawable.zenethallgat);
-        }
-        else if(galamb.getMitcsinal() == 7)
-        {
-            galamb.setKepId(R.drawable.dolgozas);
-        }
-        else
-        {
-            galamb.setKepId(R.drawable.sima_galamb_3);
-        }
+    private void KepValtas() {
+//        if (galamb.getMitcsinal() == (0)) {
+//            galamb.setKepId(R.drawable.alszik);
+//        } else if (galamb.getMitcsinal() == 1) {
+//            galamb.setKepId(R.drawable.sportol);
+//        } else if (galamb.getMitcsinal() == 2) {
+//            galamb.setKepId(R.drawable.tanul);
+//        } else if (galamb.getMitcsinal() == 3) {
+//            galamb.setKepId(R.drawable.telefonozik);
+//        } else if (galamb.getMitcsinal() == 4) {
+//            galamb.setKepId(R.drawable.olvas);
+//        } else if (galamb.getMitcsinal() == 5) {
+//            galamb.setKepId(R.drawable.lazul);
+//        } else if (galamb.getMitcsinal() == 6) {
+//            galamb.setKepId(R.drawable.zenethallgat);
+//        } else if (galamb.getMitcsinal() == 7) {
+//            galamb.setKepId(R.drawable.dolgozas);
+//        } else {
+//            galamb.setKepId(R.drawable.sima_galamb_3);
+//        }
+        galamb.setKepId(ImagesToActivities.get(galamb.getMitcsinal()));
         galambKep.setImageResource(galamb.getKepId());
-        galambKep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Etetes();
-            }
-        });
     }
 
-    private void Etetes()
-    {
-        if(0<=galamb.getSelectedFood() && galamb.getSelectedFood()<=Store.getFoods().size())
-        {
-            Food kaja = Store.getFoods().get(galamb.getSelectedFood());
-            if((int)galamb.getKajamennyiseg().get(kaja.getName())>0)
-            {
-                galamb.Eves(kaja.getNutrient());
-                galamb.KajaFogyasztas(kaja.getName());
-                Toast.makeText(getApplicationContext(),"nyamm", Toast.LENGTH_SHORT).show();
-
-                if(((int)galamb.getKajamennyiseg().get(kaja.getName())==0))
-                {
-                    TextView kajatextview = (TextView)findViewById(R.id.selecetedFoodTextview);
-                    kajatextview.setText("Nincs kiválasztva étel!");
-                    kajatextview.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+    private void EatSomeFood() {
+        if (0 <= galamb.getSelectedFood() && galamb.getSelectedFood() <= Store.getFoods().size()) {
+            Food food = Store.getFoods().get(galamb.getSelectedFood());
+            int amountOfSelectedFood = (int) galamb.getKajamennyiseg().get(food.getName());
+            if (amountOfSelectedFood > 0) {
+                galamb.Eves(food.getNutrient());
+                galamb.KajaFogyasztas(food.getName());
+                Toast.makeText(getApplicationContext(), "nyammm", Toast.LENGTH_SHORT).show();
+                //Ha elfogyott
+                if (amountOfSelectedFood == 1) {
                     galamb.setSelectedFood(-1);
-                    Toast.makeText(getApplicationContext(),"Az étel elfogyott", Toast.LENGTH_SHORT).show();
+                    SelectedFoodShow();
+                    Toast.makeText(getApplicationContext(), "Az étel elfogyott", Toast.LENGTH_SHORT).show();
                 }
             }
-
         }
     }
 
-    private PropertyAdapter ListaFeltoltesEsAdapterreKonvertalas()
-    {
+    private PropertyAdapter ListaFeltoltesEsAdapterreKonvertalas() {
         List<ListItemDataModel> drawerItem = new ArrayList<>(Galamb.ENNYIPROPERTYVAN);
 
 
@@ -430,8 +396,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return new PropertyAdapter(drawerItem);
     }
 
-    private void SvipehezBeallitas()
-    {
+    private void SvipehezBeallitas() {
         mDrawerList.setAdapter(ListaFeltoltesEsAdapterreKonvertalas());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -447,11 +412,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    private void Mentes()
-    {
-
+    private void SaveToStorage() {
         FileOutputStream fos = null;
-        ObjectOutputStream oos  = null;
+        ObjectOutputStream oos = null;
         try {
             fos = openFileOutput(FILENAME, MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
@@ -464,15 +427,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             e.printStackTrace();
         }
     }
-    private void Betoltes()
-    {
+
+    private void LoadFromStorage() {
         try {
             FileInputStream fis = openFileInput(FILENAME);
-            ObjectInputStream is = new ObjectInputStream(fis);
-            Galamb teszt = (Galamb) is.readObject();
-            if(teszt!= null && !teszt.getNev().equals(""))
-                galamb=teszt;
-            is.close();
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Galamb test = (Galamb) ois.readObject();
+            if (test != null && !test.getNev().equals(""))
+                galamb = test;
+            ois.close();
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -482,19 +445,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-        Mentes();
+        SaveToStorage();
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-        Betoltes();
-
-
+        LoadFromStorage();
     }
 
 
@@ -514,14 +475,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getSupportActionBar().setTitle(mTitle);
     }
 
-    void setupToolbar(){
+    void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    void setupDrawerToggle(){
-        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
+    void setupDrawerToggle() {
+        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         //This is necessary to change the icon of the Drawer Toggle upon state change.
         mDrawerToggle.syncState();
     }
@@ -529,8 +490,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // --------------------------stepcounter -----------------------------------
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(stepcounterIsRunning)
-        {
+        if (stepcounterIsRunning) {
             step++;
         }
     }
