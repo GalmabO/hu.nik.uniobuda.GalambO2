@@ -2,6 +2,7 @@ package nik.uniobuda.hu.galambo;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -49,11 +50,21 @@ public class PropertyAdapter extends BaseAdapter  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View listItemView = convertView;
-        if(listItemView == null)
-            listItemView= View.inflate(parent.getContext(), R.layout.listitem_adatok,null);
+        ViewHolderPropertyAdapter holder;
 
-        TextView propertyTextView = (TextView) listItemView.findViewById(R.id.property);
+        if(convertView == null)
+        {
+            convertView= View.inflate(parent.getContext(), R.layout.listitem_adatok,null);
+            holder= new ViewHolderPropertyAdapter();
+            holder.arrow= (ImageView) convertView.findViewById(R.id.doveArrow);
+            holder.layout= (RelativeLayout) convertView.findViewById(R.id.doveBar);
+            convertView.setTag(holder);
+        }
+        else
+            holder= (ViewHolderPropertyAdapter) convertView.getTag();
+
+
+        TextView propertyTextView = (TextView) convertView.findViewById(R.id.property);
 
 
         ListItemDataModel tul =  items.get(position);
@@ -68,19 +79,19 @@ public class PropertyAdapter extends BaseAdapter  {
             mennyi = tul.getValue();
 
         mennyi = mennyi + 100;
-        ImageView doveArrow = (ImageView)listItemView.findViewById(R.id.doveArrow);
+        ImageView doveArrow = (ImageView)convertView.findViewById(R.id.doveArrow);
         android.view.ViewGroup.MarginLayoutParams marginParams = (android.view.ViewGroup.MarginLayoutParams) doveArrow.getLayoutParams();
 
         mennyi = mennyi - 10;
 
         marginParams.setMargins(dpToPx(mennyi), marginParams.topMargin, marginParams.rightMargin, marginParams.bottomMargin);
 
-        RelativeLayout doveBar = (RelativeLayout) listItemView.findViewById(R.id.doveBar);
+        RelativeLayout doveBar = (RelativeLayout) convertView.findViewById(R.id.doveBar);
         doveBar.requestLayout();
 
         //első érték a value, második a property neve
         propertyTextView.setText(tul.getProp().toString());
-        return listItemView;
+        return convertView;
     }
 
     public static int dpToPx(double dp)

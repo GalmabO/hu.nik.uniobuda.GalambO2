@@ -166,6 +166,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 TevekenysegDialog();
             }
         });
+
+
+
+        Button OpenStepCounterLogActivitygomb = (Button) findViewById(R.id.OpenStepCounterLogActivity);
+        OpenStepCounterLogActivitygomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenStepCounterLogActivitySelect();
+            }
+        });
     }
 
     private void loadImagesToActivities() {
@@ -180,6 +190,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ImagesToActivities.put(6, R.drawable.zenethallgat);
         ImagesToActivities.put(7, R.drawable.dolgozas);
     }
+
+    private void OpenStepCounterLogActivitySelect()
+    {
+        Intent intent = new Intent(MainActivity.this, StepCounterLogAvtivity.class);
+        intent.putExtra("StepCountList", (Serializable) galamb.getPreviousSteps());
+        this.startActivity(intent);
+    }
+
 
     private void TevekenysegDialog() {
         final CharSequence[] activities = new CharSequence[Galamb.ezeketcsinalhatja.length];
@@ -210,9 +228,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             galamb.Mozgas(Calendar.getInstance().getTime(), step);
             step = 0;
         }
-        if (TevekenysegID == 1) {
+        if (TevekenysegID == 1) { //mozgás
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (countSensor != null) {
                 stepcounterIsRunning = true;

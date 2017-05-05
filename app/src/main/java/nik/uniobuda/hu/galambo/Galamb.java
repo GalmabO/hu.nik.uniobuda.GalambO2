@@ -29,7 +29,6 @@ public class Galamb implements Serializable  {
     private double intelligencia;
     private double kipihentseg;
 
-
     static final String[] ezeketcsinalhatja = new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
 
     private int mitcsinal;
@@ -43,8 +42,10 @@ public class Galamb implements Serializable  {
 
     private int selectedFood;
 
-    int a = 5;
     private int penz;
+
+    private List<StepCounterLog> previousSteps;
+
 
 
     public Galamb(String nev) {
@@ -61,6 +62,8 @@ public class Galamb implements Serializable  {
         activityStartedDate = Calendar.getInstance().getTime().getTime();
         selectedFood = -1;
         kajamennyiseg = new HashMap();
+
+        previousSteps = new ArrayList<>();
         KajamennyisegIni();
     }
 
@@ -172,78 +175,89 @@ public class Galamb implements Serializable  {
         }
     }
 
+    public List<StepCounterLog> getPreviousSteps() {
+        return previousSteps;
+    }
+
+    public void addPreviousSteps(StepCounterLog previousStep) {
+        previousSteps.add(previousStep);
+    }
+
+
     public void Alvas(double time) {
         if (time < 480) //480--> 80 óra
-            kipihentseg += (time * 2) / 20; //8óránál kevesebb alvás
+            kipihentseg += (time * 2) /5; //8óránál kevesebb alvás
         else {
-            kipihentseg += (time * 1.5) / 20; //túlalvás
-            intelligencia -= (time * 0.01) / 20; // sok alvástól butább lesz
+            kipihentseg += (time * 1.5) /5; //túlalvás
+            intelligencia -= (time * 0.01) /5; // sok alvástól butább lesz
         }
-        fittseg -= (time * 0.08) / 20; //az alvástól veszéít a fittségéből (kis mennyiségben)
-        jollakottsag -= time / 20; // eltelt idővel arányosan lesz éhes
+        fittseg -= (time * 0.08) /5; //az alvástól veszéít a fittségéből (kis mennyiségben)
+        jollakottsag -= time/5 ; // eltelt idővel arányosan lesz éhes
     }
 
     public void Mozgas(Date changedTime, int step) {
         long diffInMs = changedTime.getTime() - activityStartedDate;
         double time = diffInMs / (60 * 5000) % 60;
 
-        fittseg += (time * 1.5) / 400 + step / 5000;
-        kipihentseg -= (time * 0.5) / 400 + step / 5000;
-        kedelyallapot += (time * 0.5) / 400 + step / 5000;
-        jollakottsag -= time / 400 + step / 5000;
-        egeszseg += (time * 0.2) / 400 + step / 5000;
+        fittseg += (time * 1.5) / 400 + step / 500;
+        kipihentseg -= (time * 0.5) / 400 + step / 500;
+        kedelyallapot += (time * 0.5) / 400 + step / 500;
+        jollakottsag -= time / 400 + step / 500;
+        egeszseg += (time * 0.2) / 400 + step / 500;
+
+        this.addPreviousSteps(new StepCounterLog(step, time));
     }
 
     public void Tanulas(double time) {
-        intelligencia += (time * 2) / 20;
+        intelligencia += (time * 2) /5;
         Random rnd = new Random();
-        kedelyallapot += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / 20; //random hogy jó-e tanulni
-        fittseg -= (time * 0.08) / 20;
-        kipihentseg -= (time * 0.8) / 20;
-        jollakottsag -= time / 20;
-        penz += (time) / 20;
+        kedelyallapot += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) /5; //random hogy jó-e tanulni
+        fittseg -= (time * 0.08) /5;
+        kipihentseg -= (time * 0.8) /5;
+        jollakottsag -= time /5;
+        penz += (time) /5;
     }
 
     public void Telefonozas(double time) {
-        kedelyallapot += (time * 1.01) / 20;
+        kedelyallapot += (time * 1.01) /5;
         Random rnd = new Random();
-        intelligencia += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / 20;
-        fittseg -= (time * 0.08) / 20;
-        kipihentseg -= (time * 0.6) / 20;
-        egeszseg -= (time * 0.1) / 20;
-        jollakottsag -= (time) / 20;
+        intelligencia += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)/5 ;
+        fittseg -= (time * 0.08)/5;
+        kipihentseg -= (time * 0.6)/5;
+        egeszseg -= (time * 0.1)/5;
+        jollakottsag -= (time)/5;
     }
 
     public void Olvasas(double time) {
-        intelligencia += (time * 1.2) / 20;
-        kipihentseg -= (time * 0.8) / 20;
-        fittseg -= (time * 0.08) / 20;
-        jollakottsag -= (time) / 20;
+        intelligencia += (time * 1.2) /5;
+        kipihentseg -= (time * 0.8) /5;
+        fittseg -= (time * 0.08)/5;
+        jollakottsag -= (time)/5;
     }
 
     public void Lazulas(double time) {
-        kedelyallapot += (time * 2) / 20;
-        kipihentseg -= (time * 0.3) / 20;
-        fittseg -= (time * 0.08) / 20;
-        jollakottsag -= (time) / 20;
-        egeszseg -= (time * 0.1) / 20;
+        kedelyallapot += (time * 2)/5;
+        kipihentseg -= (time * 0.3)/5;
+        fittseg -= (time * 0.08) /5;
+        jollakottsag -= (time) /5;
+        egeszseg -= (time * 0.1) /5;
     }
 
     public void ZeneHallgatas(double time) {
-        kedelyallapot += (time * 1.3) / 20;
-        kipihentseg -= (time * 0.2) / 20;
-        fittseg -= (time * 0.08) / 20;
-        jollakottsag -= (time) / 20;
+        kedelyallapot += (time * 1.3) /5;
+        kipihentseg -= (time * 0.2) /5;
+        fittseg -= (time * 0.08) /5;
+        jollakottsag -= (time)/5;
     }
 
     public void Dolgozas(double time) {
-        kedelyallapot -= (time * 0.5) / 20;
-        kipihentseg -= (time * 0.5) / 20;
-        fittseg -= (time * 0.5) / 20;
-        egeszseg -= (time * 0.1) / 20;
-        intelligencia -= (time * 0.05) / 20;
-        jollakottsag -= (time) / 20;
-        penz += (time * 4) / 20;
+        kedelyallapot -= (time * 0.5)/5;
+        kipihentseg -= (time * 0.5) /5;
+        fittseg -= (time * 0.5)/5;
+        egeszseg -= (time * 0.1)/5;
+        intelligencia -= (time * 0.05)/5;
+        jollakottsag -= (time)/5;
+        penz += (time * 4)/5;
     }
 
     public void Eves(int valasztottkajataplalekmennyisege) {

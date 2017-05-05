@@ -42,13 +42,23 @@ public class FoodAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //TODO újrahasznosítás
-        View listItemView = convertView;
-        if (listItemView == null)
-            listItemView = View.inflate(parent.getContext(), R.layout.listitem_food, null);
+        ViewHolderFoodAdapter holder;
+
+
+        if (convertView == null)
+        {
+            convertView = View.inflate(parent.getContext(), R.layout.listitem_food, null);
+            holder= new ViewHolderFoodAdapter();
+            holder.FoodName= (TextView) convertView.findViewById(R.id.FoodNameTextBox);
+            holder.FoodImage= (ImageView) convertView.findViewById(R.id.FoodImageView);
+            convertView.setTag(holder);
+        }
+        else
+            holder= (ViewHolderFoodAdapter) convertView.getTag();
 
         //Elemek elérése
-        TextView nevTextView = (TextView) listItemView.findViewById(R.id.FoodNameTextBox);
-        ImageView foodImageView = (ImageView) listItemView.findViewById(R.id.FoodImageView);
+        TextView nevTextView = (TextView) convertView.findViewById(R.id.FoodNameTextBox);
+        ImageView foodImageView = (ImageView) convertView.findViewById(R.id.FoodImageView);
         Food food = items.get(position);
         Drawable image = appContext.getResources().getDrawable(food.getImageID(), null);
 
@@ -56,6 +66,6 @@ public class FoodAdapter extends BaseAdapter {
         nevTextView.setText(food.getName());
         foodImageView.setImageDrawable(image);
 
-        return listItemView;
+        return convertView;
     }
 }
