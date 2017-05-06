@@ -180,7 +180,14 @@ public class Galamb implements Serializable  {
     }
 
     public void addPreviousSteps(StepCounterLog previousStep) {
-        previousSteps.add(previousStep);
+       if (previousStep!=null)
+       {
+           if (previousSteps==null)
+           {
+               previousSteps = new ArrayList<StepCounterLog>();
+           }
+           previousSteps.add(previousStep);
+       }
     }
 
 

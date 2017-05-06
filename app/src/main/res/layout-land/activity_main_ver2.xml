@@ -146,6 +146,15 @@
                 android:text="Irány a bolt!"
                 android:textColor="@color/Purple_medium" />
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/OpenStepCounterLogActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/sand"
+                android:text="Mozgásnapló"
+                android:textColor="@color/Purple_medium"/>
+
         </LinearLayout>
     </LinearLayout>
 

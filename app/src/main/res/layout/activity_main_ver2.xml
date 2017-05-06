@@ -122,24 +122,34 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/OpenStoreActivity"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill"
-            android:background="@color/sand"
-            android:text="Irány a bolt!"
-            android:textColor="@color/Purple_medium"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/OpenStepCounterLogActivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill"
-            android:background="@color/sand"
-            android:text="Az eddigi mozgások megtekintése"
-            android:textColor="@color/Purple_medium"/>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/OpenStoreActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/sand"
+                android:text="Irány a bolt!"
+                android:textColor="@color/Purple_medium"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="24dp"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/OpenStepCounterLogActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/sand"
+                android:layout_weight="1"
+                android:text="Mozgásnapló"
+                android:layout_marginStart="24dp"
+                android:textColor="@color/Purple_medium"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
