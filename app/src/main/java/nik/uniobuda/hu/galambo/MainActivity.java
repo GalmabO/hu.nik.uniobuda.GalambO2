@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             galamb.Mozgas(DateTime.now(), step);
             step = 0;
         }
+
         if (TevekenysegID == 1) { //mozgás
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -251,12 +252,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 countSensor = null;
                 stepcounterIsRunning = false;
             }
-        } else {
-            sensorManager = null;
-            countSensor = null;
-            stepcounterIsRunning = false;
-            galamb.DoveActivityChange(TevekenysegID, DateTime.now());
         }
+        else
+            galamb.DoveActivityChange(TevekenysegID, DateTime.now());
+
         galamb.setMitcsinal(TevekenysegID);
         KepValtas();
     }

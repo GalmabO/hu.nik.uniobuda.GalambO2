@@ -201,10 +201,9 @@ public class Galamb implements Serializable  {
     }
 
     public void Mozgas(DateTime changedTime, int step) {
+
         Period p = new Period(activityStartedDate,changedTime);
-        long time = p.getSeconds()/60;
-//        long diffInMs =  - activityStartedDate;
-//        double time = diffInMs /( 60 * 1000)%60 ;
+        double time = TimeDiffInMinute(changedTime);
 
 
         fittseg += (time * 1.5) / 400 + step / 500;
@@ -278,8 +277,7 @@ public class Galamb implements Serializable  {
 
         public void DoveActivityChange(int activityID, DateTime changedTime) {
 
-        Period p = new Period(activityStartedDate,changedTime);
-        long time = p.getSeconds()/60;
+        double time = TimeDiffInMinute(changedTime);
 
         DoveActivityChanger(activityID, time);
 
@@ -287,7 +285,7 @@ public class Galamb implements Serializable  {
 
     }
 
-    private void DoveActivityChanger(int which, long time) {
+    private void DoveActivityChanger(int which, double time) {
         switch (which) {
             case 0:
                 Alvas(time);
@@ -313,6 +311,12 @@ public class Galamb implements Serializable  {
         }
     }
 
+    private double TimeDiffInMinute(DateTime changedTime)
+    {
+        Period p = new Period(activityStartedDate,changedTime);
+        return p.getYears()*12*30*24*60 + p.getMonths()*30*24*60 + p.getDays()*24*60 + p.getHours()*60 +p.getMinutes() + p.getSeconds()/60;
+
+    }
 
     public void KajaVasarlas(String nev) {
         kajamennyiseg.put(nev, (int) kajamennyiseg.get(nev) + 1);
