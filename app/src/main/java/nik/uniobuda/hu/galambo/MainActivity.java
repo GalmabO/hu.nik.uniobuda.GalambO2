@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.joda.time.DateTime;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,13 +38,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private Galamb galamb;
-    private final String FILENAME = "Galamb_Peldany";
+    private final String FILENAME = "Galamb___Peldany";
+    private final String FILENAME_DATE = "date";
     SparseIntArray ImagesToActivities;
 
     //Felület:
@@ -195,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     {
         Intent intent = new Intent(MainActivity.this, StepCounterLogAvtivity.class);
         intent.putExtra("StepCountList", (Serializable) galamb.getPreviousSteps());
-        this.startActivity(intent);
+        this.startActivityForResult(intent,2);
     }
 
 
@@ -225,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void TevekenysegValtas(int TevekenysegID) {
         if (galamb.getMitcsinal() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
         {
-            galamb.Mozgas(Calendar.getInstance().getTime(), step);
+            galamb.Mozgas(DateTime.now(), step);
             step = 0;
         }
         if (TevekenysegID == 1) { //mozgás
@@ -244,9 +251,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             sensorManager = null;
             countSensor = null;
             stepcounterIsRunning = false;
-            galamb.DoveActivityChange(TevekenysegID, Calendar.getInstance().getTime());
+            galamb.DoveActivityChange(TevekenysegID, DateTime.now());
         }
-        galamb.setMitcsinal(TevekenysegID);
+        galamb.setMitcsinal(TevekenysegID);galamb.DoveActivityChange(TevekenysegID, DateTime.now());
         KepValtas();
     }
 
@@ -310,6 +317,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 SaveToStorage();
             }
         }
+        else if (requestCode == 2)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                galamb.setPreviousSteps((List<StepCounterLog>) data.getSerializableExtra("lista"));
+                SaveToStorage();
+            }
+        }
     }
 
     private void LoadLayoutElementsOnStart() {
@@ -343,25 +358,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void KepValtas() {
-//        if (galamb.getMitcsinal() == (0)) {
-//            galamb.setKepId(R.drawable.alszik);
-//        } else if (galamb.getMitcsinal() == 1) {
-//            galamb.setKepId(R.drawable.sportol);
-//        } else if (galamb.getMitcsinal() == 2) {
-//            galamb.setKepId(R.drawable.tanul);
-//        } else if (galamb.getMitcsinal() == 3) {
-//            galamb.setKepId(R.drawable.telefonozik);
-//        } else if (galamb.getMitcsinal() == 4) {
-//            galamb.setKepId(R.drawable.olvas);
-//        } else if (galamb.getMitcsinal() == 5) {
-//            galamb.setKepId(R.drawable.lazul);
-//        } else if (galamb.getMitcsinal() == 6) {
-//            galamb.setKepId(R.drawable.zenethallgat);
-//        } else if (galamb.getMitcsinal() == 7) {
-//            galamb.setKepId(R.drawable.dolgozas);
-//        } else {
-//            galamb.setKepId(R.drawable.sima_galamb_3);
-//        }
         galamb.setKepId(ImagesToActivities.get(galamb.getMitcsinal()));
         galambKep.setImageResource(galamb.getKepId());
     }
@@ -436,7 +432,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         try {
             fos = openFileOutput(FILENAME, MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
-            Gson gson = new Gson();
+//            Gson gson = new Gson();
+            Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
             String str = gson.toJson(galamb);
             oos.writeObject(str);
             oos.close();
@@ -453,7 +450,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             FileInputStream fis = openFileInput(FILENAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
             String str = (String) ois.readObject();
-            Gson gson = new Gson();
+//            Gson gson = new Gson();
+            Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
             Galamb test = gson.fromJson(str, Galamb.class);
             if (test != null && !test.getNev().equals(""))
                 galamb = test;

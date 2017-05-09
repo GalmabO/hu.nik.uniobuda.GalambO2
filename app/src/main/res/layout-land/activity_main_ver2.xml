@@ -105,7 +105,7 @@
                     android:layout_columnWeight="1"
                     android:text="Kiválasztott étel: "
                     android:textColor="@color/sand"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="4dp"
                     android:gravity="center"/>
 
 
@@ -122,7 +122,7 @@
                 android:id="@+id/FoodSelectionButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/sand"
                 android:text="Kaja választás!"
                 android:textColor="@color/Purple_medium" />
@@ -141,7 +141,6 @@
                 android:id="@+id/OpenStoreActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="fill"
                 android:background="@color/sand"
                 android:text="Irány a bolt!"
                 android:textColor="@color/Purple_medium" />

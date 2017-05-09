@@ -44,8 +44,8 @@ public class StepCounterLogAdapter extends BaseAdapter
         TextView timetextview = (TextView) convertView.findViewById(R.id.time);
         TextView steptextview = (TextView) convertView.findViewById(R.id.step);
 
-        timetextview.setText(String.valueOf(items.get(position).getMinutes())+ " perc");
-        steptextview.setText(String.valueOf(items.get(position).getStepCount())+ " darab lépés");
+        timetextview.setText(String.valueOf(items.get(position).getTimeInFormat()));
+        steptextview.setText(String.valueOf(items.get(position).getStepCount())+ " lépés");
 
         return convertView;
     }

@@ -8,16 +8,28 @@ import java.io.Serializable;
 
 public class StepCounterLog implements Serializable {
     int stepCount;
-    double minutes;
+    int minutes;
+    int hours;
+    int seconds;
 
-    public StepCounterLog(int stepCount, double minutes) {
+    public StepCounterLog(int stepCount, int hours, int minutes,int seconds) {
         this.stepCount = stepCount;
         this.minutes = minutes;
+        this.hours = hours;
+        this.seconds = seconds;
     }
 
     public int getStepCount() {
 
         return stepCount;
+    }
+
+    public String getTimeInFormat()
+    {
+
+        return ((hours)>9?String.valueOf(hours):"0"+String.valueOf(hours))+":"
+                +((minutes)>9?String.valueOf(minutes):"0"+String.valueOf(minutes))+":"
+                +((seconds)>9?String.valueOf(seconds):"0"+String.valueOf(seconds));
     }
 
     public void setStepCount(int stepCount) {
@@ -26,9 +38,5 @@ public class StepCounterLog implements Serializable {
 
     public double getMinutes() {
         return minutes;
-    }
-
-    public void setMinutes(double minutes) {
-        this.minutes = minutes;
     }
 }

@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nik.uniobuda.hu.galambo.StepCounterLogAvtivity">
+    tools:context="nik.uniobuda.hu.galambo.StepCounterLogAvtivity"
+    android:background="@color/Purple_medium">
 
+<android.support.v7.widget.AppCompatTextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Előző tevékenységek:"
+    android:gravity="center"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:id="@+id/header"
+    android:textColor="@color/sand"
+    android:layout_margin="8dp"/>
 
     <GridView
         android:id="@+id/timeAndSteps"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="2"/>
 
-</RelativeLayout>
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adatok törlése"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_gravity="center"
+        android:background="@color/sand"
+        android:textColor="@color/Purple_medium"
+        android:id="@+id/clearButton"
+        android:layout_marginBottom="16dp"/>
+
+</LinearLayout>

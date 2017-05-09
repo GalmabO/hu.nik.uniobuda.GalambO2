@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -16,9 +19,9 @@ import java.util.*;
 
 //A nevelgetett galambunkat reprezentáló osztály
 public class Galamb implements Serializable  {
-    private int teljesSzint;
-
     private String nev;
+
+    final int TIMECORRETION = 5;
 
     private int kepId;
 
@@ -33,7 +36,7 @@ public class Galamb implements Serializable  {
 
     private int mitcsinal;
 
-    private long activityStartedDate;
+    private DateTime activityStartedDate;
 
     public static final int ENNYIPROPERTYVAN = 6;
 
@@ -44,12 +47,15 @@ public class Galamb implements Serializable  {
 
     private int penz;
 
+    public void setPreviousSteps(List<StepCounterLog> previousSteps) {
+        this.previousSteps = previousSteps;
+    }
+
     private List<StepCounterLog> previousSteps;
 
 
 
     public Galamb(String nev) {
-        this.teljesSzint = 1;
         this.nev = nev;
         this.egeszseg = 0;
         this.fittseg = 0;
@@ -59,7 +65,7 @@ public class Galamb implements Serializable  {
         this.kipihentseg = 0;
         penz = 200; //ajándék
         mitcsinal = 0;
-        activityStartedDate = Calendar.getInstance().getTime().getTime();
+        activityStartedDate = DateTime.now();
         selectedFood = -1;
         kajamennyiseg = new HashMap();
 
@@ -70,14 +76,6 @@ public class Galamb implements Serializable  {
 
     public String getNev() {
         return nev;
-    }
-
-    public int getTeljesSzint() {
-        return teljesSzint;
-    }
-
-    public void setTeljesSzint(int teljesSzint) {
-        this.teljesSzint += teljesSzint;
     }
 
     public int getKepId() {
@@ -193,18 +191,21 @@ public class Galamb implements Serializable  {
 
     public void Alvas(double time) {
         if (time < 480) //480--> 80 óra
-            kipihentseg += (time * 2) /5; //8óránál kevesebb alvás
+            kipihentseg += (time * 2) /TIMECORRETION; //8óránál kevesebb alvás
         else {
-            kipihentseg += (time * 1.5) /5; //túlalvás
-            intelligencia -= (time * 0.01) /5; // sok alvástól butább lesz
+            kipihentseg += (time * 1.5) /TIMECORRETION; //túlalvás
+            intelligencia -= (time * 0.01) /TIMECORRETION; // sok alvástól butább lesz
         }
-        fittseg -= (time * 0.08) /5; //az alvástól veszéít a fittségéből (kis mennyiségben)
-        jollakottsag -= time/5 ; // eltelt idővel arányosan lesz éhes
+        fittseg -= (time * 0.08) /TIMECORRETION; //az alvástól veszéít a fittségéből (kis mennyiségben)
+        jollakottsag -= time/TIMECORRETION ; // eltelt idővel arányosan lesz éhes
     }
 
-    public void Mozgas(Date changedTime, int step) {
-        long diffInMs = changedTime.getTime() - activityStartedDate;
-        double time = diffInMs / (60 * 5000) % 60;
+    public void Mozgas(DateTime changedTime, int step) {
+        Period p = new Period(activityStartedDate,changedTime);
+        long time = p.getSeconds()/60;
+//        long diffInMs =  - activityStartedDate;
+//        double time = diffInMs /( 60 * 1000)%60 ;
+
 
         fittseg += (time * 1.5) / 400 + step / 500;
         kipihentseg -= (time * 0.5) / 400 + step / 500;
@@ -212,77 +213,80 @@ public class Galamb implements Serializable  {
         jollakottsag -= time / 400 + step / 500;
         egeszseg += (time * 0.2) / 400 + step / 500;
 
-        this.addPreviousSteps(new StepCounterLog(step, time));
+        this.addPreviousSteps(new StepCounterLog(step, p.getHours(),p.getMinutes(),p.getSeconds()));
     }
 
     public void Tanulas(double time) {
-        intelligencia += (time * 2) /5;
+        intelligencia += (time * 2) /TIMECORRETION;
         Random rnd = new Random();
-        kedelyallapot += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) /5; //random hogy jó-e tanulni
-        fittseg -= (time * 0.08) /5;
-        kipihentseg -= (time * 0.8) /5;
-        jollakottsag -= time /5;
-        penz += (time) /5;
+        kedelyallapot += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) /TIMECORRETION; //random hogy jó-e tanulni
+        fittseg -= (time * 0.08) /TIMECORRETION;
+        kipihentseg -= (time * 0.8) /TIMECORRETION;
+        jollakottsag -= time /TIMECORRETION;
+        penz += time;
     }
 
     public void Telefonozas(double time) {
-        kedelyallapot += (time * 1.01) /5;
+        kedelyallapot += (time * 1.01) /TIMECORRETION;
         Random rnd = new Random();
-        intelligencia += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)/5 ;
-        fittseg -= (time * 0.08)/5;
-        kipihentseg -= (time * 0.6)/5;
-        egeszseg -= (time * 0.1)/5;
-        jollakottsag -= (time)/5;
+        intelligencia += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)/TIMECORRETION ;
+        fittseg -= (time * 0.08)/TIMECORRETION;
+        kipihentseg -= (time * 0.6)/TIMECORRETION;
+        egeszseg -= (time * 0.1)/TIMECORRETION;
+        jollakottsag -= (time)/TIMECORRETION;
     }
 
     public void Olvasas(double time) {
-        intelligencia += (time * 1.2) /5;
-        kipihentseg -= (time * 0.8) /5;
-        fittseg -= (time * 0.08)/5;
-        jollakottsag -= (time)/5;
+        intelligencia += (time * 1.2) /TIMECORRETION;
+        kipihentseg -= (time * 0.8) /TIMECORRETION;
+        fittseg -= (time * 0.08)/TIMECORRETION;
+        jollakottsag -= (time)/TIMECORRETION;
     }
 
     public void Lazulas(double time) {
-        kedelyallapot += (time * 2)/5;
-        kipihentseg -= (time * 0.3)/5;
-        fittseg -= (time * 0.08) /5;
-        jollakottsag -= (time) /5;
-        egeszseg -= (time * 0.1) /5;
+        kedelyallapot += (time * 2)/TIMECORRETION;
+        kipihentseg -= (time * 0.3)/TIMECORRETION;
+        fittseg -= (time * 0.08) /TIMECORRETION;
+        jollakottsag -= (time) /TIMECORRETION;
+        egeszseg -= (time * 0.1) /TIMECORRETION;
     }
 
     public void ZeneHallgatas(double time) {
-        kedelyallapot += (time * 1.3) /5;
-        kipihentseg -= (time * 0.2) /5;
-        fittseg -= (time * 0.08) /5;
-        jollakottsag -= (time)/5;
+        kedelyallapot += (time * 1.3) /TIMECORRETION;
+        kipihentseg -= (time * 0.2) /TIMECORRETION;
+        fittseg -= (time * 0.08) /TIMECORRETION;
+        jollakottsag -= (time)/TIMECORRETION;
     }
 
     public void Dolgozas(double time) {
-        kedelyallapot -= (time * 0.5)/5;
-        kipihentseg -= (time * 0.5) /5;
-        fittseg -= (time * 0.5)/5;
-        egeszseg -= (time * 0.1)/5;
-        intelligencia -= (time * 0.05)/5;
-        jollakottsag -= (time)/5;
-        penz += (time * 4)/5;
+        kedelyallapot -= (time * 0.5)/TIMECORRETION;
+        kipihentseg -= (time * 0.5) /TIMECORRETION;
+        fittseg -= (time * 0.5)/TIMECORRETION;
+        egeszseg -= (time * 0.1)/TIMECORRETION;
+        intelligencia -= (time * 0.05)/TIMECORRETION;
+        jollakottsag -= (time)/TIMECORRETION;
+        penz += (time * 4);
     }
 
     public void Eves(int valasztottkajataplalekmennyisege) {
         kipihentseg -= 0.2;
         fittseg -= 0.2;
         egeszseg += 0.2;
-        jollakottsag += valasztottkajataplalekmennyisege * 0.75;
+        jollakottsag += valasztottkajataplalekmennyisege;
     }
 
-    public void DoveActivityChange(int activityID, Date changedTime) {
+        public void DoveActivityChange(int activityID, DateTime changedTime) {
 
-        long diffInMs = changedTime.getTime() - activityStartedDate;
-        long powerOfChangedTime = diffInMs / (60 * 1000) % 60;
+        Period p = new Period(activityStartedDate,changedTime);
+        long time = p.getSeconds()/60;
+
+//        long diffInMs = changedTime.getTime() - activityStartedDate;
+//        long powerOfChangedTime = diffInMs / (60 * 1000) % 60;
         //ez lesz az az érték ami meghatározza hogy milyen szintán változnak az egyes propertyk értékei.
 
-        DoveActivityChanger(activityID, powerOfChangedTime);
+        DoveActivityChanger(activityID, time);
 
-        activityStartedDate = changedTime.getTime();
+        activityStartedDate = changedTime;
 
     }
 
