@@ -1,16 +1,9 @@
 package nik.uniobuda.hu.galambo;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.Gson;
-
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.*;
 
 /**
@@ -18,72 +11,61 @@ import java.util.*;
  */
 
 //A nevelgetett galambunkat reprezentáló osztály
-public class Galamb implements Serializable  {
-    private String nev;
+public class Galamb implements Serializable {
 
-    final int TIMECORRETION = 5;
+    //region consts
+    //Milyen gyorsan változzanak a tulajdonságok
+    final int TIMECORRETION = 10;
 
-    private int kepId;
+    //Lehetséges tevékenységek
+    static final String[] ezeketcsinalhatja =
+            new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
+    public static final int NUMOFPROPERTIES = 6;
+    //endregion
 
-    private double egeszseg;
-    private double fittseg;
-    private double jollakottsag;
-    private double kedelyallapot;
-    private double intelligencia;
-    private double kipihentseg;
-
-    static final String[] ezeketcsinalhatja = new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
-
-    private int mitcsinal;
-
-    private DateTime activityStartedDate;
-
-    public static final int ENNYIPROPERTYVAN = 6;
-
-    //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
-    private HashMap<String ,Integer> kajamennyiseg;
-
+    //region fields
+    private String name;
+    private int imageID;
+    private double health;
+    private double fitness;
+    private double satiety;
+    private double mood;
+    private double intelligence;
+    private double relaxed;
+    private int currentActivity;
+    private List<StepCounterLog> previousSteps;
     private int selectedFood;
+    private int money;
+    private DateTime activityStartedDate;
+    private DateTime trueStartedDate;
+    //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik
+    // (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
+    private HashMap<String, Integer> foodQuantity;
+    //endregion
 
-    private int penz;
+    //region getters and setters
+    public void setActivityStartedDate(DateTime startedDate) {
+        activityStartedDate = startedDate;
+    }
 
     public void setPreviousSteps(List<StepCounterLog> previousSteps) {
         this.previousSteps = previousSteps;
     }
 
-    private List<StepCounterLog> previousSteps;
-
-
-
-    public Galamb(String nev) {
-        this.nev = nev;
-        this.egeszseg = 0;
-        this.fittseg = 0;
-        this.intelligencia = 0;
-        this.jollakottsag = 0;
-        this.kedelyallapot = 0;
-        this.kipihentseg = 0;
-        penz = 200; //ajándék
-        mitcsinal = 0;
-        activityStartedDate = DateTime.now();
-        selectedFood = -1;
-        kajamennyiseg = new HashMap();
-
-        previousSteps = new ArrayList<>();
-        KajamennyisegIni();
+    public String getName() {
+        return name;
     }
 
-
-    public String getNev() {
-        return nev;
+    public List<StepCounterLog> getPreviousSteps() {
+        return previousSteps;
     }
 
-    public int getKepId() {
-        return kepId;
+    public int getImageID() {
+        return imageID;
     }
 
-    public void setKepId(int kepId) {
-        this.kepId = kepId;
+    public void setImageID(int imageID) {
+        this.imageID = imageID;
     }
 
     public int getSelectedFood() {
@@ -94,231 +76,236 @@ public class Galamb implements Serializable  {
         this.selectedFood = selectedFood;
     }
 
-    public HashMap getKajamennyiseg() {
-        return kajamennyiseg;
+    public HashMap getFoodQuantity() {
+        return foodQuantity;
     }
 
-    public void setKajamennyiseg(HashMap kajamennyiseg) {
-        this.kajamennyiseg = kajamennyiseg;
+    public double getHealth() {
+        return health;
     }
 
-    public double getEgeszseg() {
-        return egeszseg;
+    public double getFitness() {
+        return fitness;
     }
 
-    public void setEgeszseg(double egeszseg) {
-        this.egeszseg += egeszseg;
+    public double getSatiety() {
+        return satiety;
     }
 
-    public double getFittseg() {
-        return fittseg;
+    public double getMood() {
+        return mood;
     }
 
-    public void setFittseg(double fittseg) {
-        this.fittseg += fittseg;
+    public double getIntelligence() {
+        return intelligence;
     }
 
-    public double getJollakottsag() {
-        return jollakottsag;
+    public double getRelaxed() {
+        return relaxed;
     }
 
-    public void setJollakottsag(double jollakottsag) {
-        this.jollakottsag += jollakottsag;
+    public int getMoney() {
+        return money;
     }
 
-    public double getKedelyallapot() {
-        return kedelyallapot;
+    public void setMoney(int money) {
+        this.money += money;
     }
 
-    public void setKedelyallapot(double kedelyallapot) {
-        this.kedelyallapot += kedelyallapot;
+    public int getCurrentActivity() {
+        return currentActivity;
     }
 
-    public double getIntelligencia() {
-        return intelligencia;
+    public void setCurrentActivity(int currentActivity) {
+        this.currentActivity = currentActivity;
     }
+//endregion
 
-    public void setIntelligencia(double intelligencia) {
-        this.intelligencia += intelligencia;
+    //region constructor
+    public Galamb(String name) {
+        this.name = name;
+        this.health = 0;
+        this.fitness = 0;
+        this.intelligence = 0;
+        this.satiety = 0;
+        this.mood = 0;
+        this.relaxed = 0;
+        money = 200; //ajándék
+        currentActivity = 0;
+        activityStartedDate = DateTime.now();
+        selectedFood = -1;
+        foodQuantity = new HashMap();
+        previousSteps = new ArrayList<>();
+        foodQuantityInit();
     }
+    //endregion
 
-    public double getKipihentseg() {
-        return kipihentseg;
-    }
+    //region Methods
 
-    public void setKipihentseg(double kipihentseg) {
-        this.kipihentseg += kipihentseg;
-    }
-
-    public int getPenz() {
-        return penz;
-    }
-
-    public void setPenz(int penz) {
-        this.penz += penz;
-    }
-
-    public int getMitcsinal() {
-        return mitcsinal;
-    }
-
-    public void setMitcsinal(int mitcsinal) {
-        this.mitcsinal = mitcsinal;
-    }
-
-    private void KajamennyisegIni() {
+    // inicializálja az ételek hashmapjét,
+    // létrehozza betesz minden ételt 0 mennyiséggel
+    private void foodQuantityInit() {
         List<Food> seged = Store.getFoods();
         for (int i = 0; i < seged.size(); i++) {
-            kajamennyiseg.put(seged.get(i).getName(),0);
+            foodQuantity.put(seged.get(i).getName(), 0);
         }
     }
 
-    public List<StepCounterLog> getPreviousSteps() {
-        return previousSteps;
-    }
-
+    // hozzáad egy új bejegyzést az előző lépsészámlálós mérések listájához
     public void addPreviousSteps(StepCounterLog previousStep) {
-       if (previousStep!=null)
-       {
-           if (previousSteps==null)
-           {
-               previousSteps = new ArrayList<StepCounterLog>();
-           }
-           previousSteps.add(previousStep);
-       }
-    }
-
-
-    public void Alvas(double time) {
-        if (time < 480) //480--> 80 óra
-            kipihentseg += (time * 2) /TIMECORRETION; //8óránál kevesebb alvás
-        else {
-            kipihentseg += (time * 1.5) /TIMECORRETION; //túlalvás
-            intelligencia -= (time * 0.01) /TIMECORRETION; // sok alvástól butább lesz
+        if (previousStep != null) {
+            if (previousSteps == null) {
+                previousSteps = new ArrayList<StepCounterLog>();
+            }
+            previousSteps.add(previousStep);
         }
-        fittseg -= (time * 0.08) /TIMECORRETION; //az alvástól veszéít a fittségéből (kis mennyiségben)
-        jollakottsag -= time/TIMECORRETION ; // eltelt idővel arányosan lesz éhes
     }
 
-    public void Mozgas(DateTime changedTime, int step) {
-        Period p = new Period(activityStartedDate,changedTime);
-        long time = p.getSeconds()/60;
-//        long diffInMs =  - activityStartedDate;
-//        double time = diffInMs /( 60 * 1000)%60 ;
+    //Alvás aktivitás végén hivódik meg
+    public void Sleep(double time) {
+        if (time < 480) //480--> 80 óra
+            relaxed += (time * 2) / TIMECORRETION; //8óránál kevesebb alvás
+        else {
+            relaxed += (time * 1.5) / TIMECORRETION; //túlalvás
+            intelligence -= (time * 0.01) / TIMECORRETION; // sok alvástól butább lesz
+        }
+        fitness -= (time * 0.08) / TIMECORRETION; //az alvástól veszéít a fittségéből (kis mennyiségben)
+        satiety -= time / TIMECORRETION; // eltelt idővel arányosan lesz éhes
+    }
 
+    //Mozgás után hívjuk meg
+    public void Move(DateTime changedTime, int step, Boolean isJustRefresh) {
 
-        fittseg += (time * 1.5) / 400 + step / 500;
-        kipihentseg -= (time * 0.5) / 400 + step / 500;
-        kedelyallapot += (time * 0.5) / 400 + step / 500;
-        jollakottsag -= time / 400 + step / 500;
-        egeszseg += (time * 0.2) / 400 + step / 500;
-
+        //Ha frissít a swipebar miatt akkor ne induljon újra az idő mérés, ezért ha van swipe akkor az első
+        //nél (amikor még null a date) betesszük a kezdő időpontot egy másik változóba,
+        //és ha tényleg befejzte a mozgást ezzel számolunk
+        if (trueStartedDate == null && isJustRefresh) {
+            trueStartedDate = activityStartedDate;
+        }
+        double time = TimeDiffInMinute(changedTime);
+        fitness += (time * 10000.5) / 400 + step / 500;
+        relaxed -= (time * 0.5) / 400 + step / 500;
+        mood += (time * 0.5) / 400 + step / 500;
+        satiety -= time / 400 + step / 500;
+        health += (time * 0.2) / 400 + step / 500;
+        //Hozzáadás a mozgásnaplóhoz
+        if (!isJustRefresh) {
+            Period p = trueStartedDate != null ? new Period(trueStartedDate, changedTime)
+                    : new Period(activityStartedDate, changedTime);
+            this.addPreviousSteps(new StepCounterLog(step, p));
+            this.trueStartedDate = null;
+        }
+        //ide külön kell mert a mozgást külön kezeljük
         activityStartedDate = changedTime;
-        this.addPreviousSteps(new StepCounterLog(step, p.getHours(),p.getMinutes(),p.getSeconds()));
     }
 
-    public void Tanulas(double time) {
-        intelligencia += (time * 2) /TIMECORRETION;
+    public void Learning(double time) {
+        intelligence += (time * 2) / TIMECORRETION;
         Random rnd = new Random();
-        kedelyallapot += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) /TIMECORRETION; //random hogy jó-e tanulni
-        fittseg -= (time * 0.08) /TIMECORRETION;
-        kipihentseg -= (time * 0.8) /TIMECORRETION;
-        jollakottsag -= time /TIMECORRETION;
-        penz += time;
+        mood += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / TIMECORRETION; //random hogy jó-e tanulni
+        fitness -= (time * 0.08) / TIMECORRETION;
+        relaxed -= (time * 0.8) / TIMECORRETION;
+        satiety -= time / TIMECORRETION;
+        money += time;
     }
 
-    public void Telefonozas(double time) {
-        kedelyallapot += (time * 1.01) /TIMECORRETION;
+    public void GamingOnPhone(double time) {
+        mood += (time * 1.01) / TIMECORRETION;
         Random rnd = new Random();
-        intelligencia += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)/TIMECORRETION ;
-        fittseg -= (time * 0.08)/TIMECORRETION;
-        kipihentseg -= (time * 0.6)/TIMECORRETION;
-        egeszseg -= (time * 0.1)/TIMECORRETION;
-        jollakottsag -= (time)/TIMECORRETION;
+        intelligence += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / TIMECORRETION;
+        fitness -= (time * 0.08) / TIMECORRETION;
+        relaxed -= (time * 0.6) / TIMECORRETION;
+        health -= (time * 0.1) / TIMECORRETION;
+        satiety -= (time) / TIMECORRETION;
     }
 
-    public void Olvasas(double time) {
-        intelligencia += (time * 1.2) /TIMECORRETION;
-        kipihentseg -= (time * 0.8) /TIMECORRETION;
-        fittseg -= (time * 0.08)/TIMECORRETION;
-        jollakottsag -= (time)/TIMECORRETION;
+    public void Read(double time) {
+        intelligence += (time * 1.2) / TIMECORRETION;
+        relaxed -= (time * 0.8) / TIMECORRETION;
+        fitness -= (time * 0.08) / TIMECORRETION;
+        satiety -= (time) / TIMECORRETION;
     }
 
-    public void Lazulas(double time) {
-        kedelyallapot += (time * 2)/TIMECORRETION;
-        kipihentseg -= (time * 0.3)/TIMECORRETION;
-        fittseg -= (time * 0.08) /TIMECORRETION;
-        jollakottsag -= (time) /TIMECORRETION;
-        egeszseg -= (time * 0.1) /TIMECORRETION;
+    public void Rest(double time) {
+        mood += (time * 2) / TIMECORRETION;
+        relaxed -= (time * 0.3) / TIMECORRETION;
+        fitness -= (time * 0.08) / TIMECORRETION;
+        satiety -= (time) / TIMECORRETION;
+        health -= (time * 0.1) / TIMECORRETION;
     }
 
-    public void ZeneHallgatas(double time) {
-        kedelyallapot += (time * 1.3) /TIMECORRETION;
-        kipihentseg -= (time * 0.2) /TIMECORRETION;
-        fittseg -= (time * 0.08) /TIMECORRETION;
-        jollakottsag -= (time)/TIMECORRETION;
+    public void ListenToMusic(double time) {
+        mood += (time * 1.3) / TIMECORRETION;
+        relaxed -= (time * 0.2) / TIMECORRETION;
+        fitness -= (time * 0.08) / TIMECORRETION;
+        satiety -= (time) / TIMECORRETION;
     }
 
-    public void Dolgozas(double time) {
-        kedelyallapot -= (time * 0.5)/TIMECORRETION;
-        kipihentseg -= (time * 0.5) /TIMECORRETION;
-        fittseg -= (time * 0.5)/TIMECORRETION;
-        egeszseg -= (time * 0.1)/TIMECORRETION;
-        intelligencia -= (time * 0.05)/TIMECORRETION;
-        jollakottsag -= (time)/TIMECORRETION;
-        penz += (time * 4);
+    public void Work(double time) {
+        mood -= (time * 0.5) / TIMECORRETION;
+        relaxed -= (time * 0.5) / TIMECORRETION;
+        fitness -= (time * 0.5) / TIMECORRETION;
+        health -= (time * 0.1) / TIMECORRETION;
+        intelligence -= (time * 0.05) / TIMECORRETION;
+        satiety -= (time) / TIMECORRETION;
+        money += (time * 4);
     }
 
-    public void Eves(int valasztottkajataplalekmennyisege) {
-        kipihentseg -= 0.2;
-        fittseg -= 0.2;
-        egeszseg += 0.2;
-        jollakottsag += valasztottkajataplalekmennyisege;
+    public void Eat(int nutritionOfChangedFood) {
+        relaxed -= 0.2;
+        fitness -= 0.2;
+        health += 0.2;
+        satiety += nutritionOfChangedFood;
     }
 
-        public void DoveActivityChange(int activityID, DateTime changedTime) {
+    public void DoveActivityChange(int activityID, DateTime changedTime) {
 
-        Period p = new Period(activityStartedDate,changedTime);
-        long time = p.getSeconds()/60;
-
+        double time = TimeDiffInMinute(changedTime);
         DoveActivityChanger(activityID, time);
-
+        //új aktivitást kezdtünk
         activityStartedDate = changedTime;
-
     }
 
-    private void DoveActivityChanger(int which, long time) {
+    //Aktivitás hatásának szimulálása, bemenet az eltelt idő
+    // (a mozgás külön van kezelve a mainactivityből)
+    private void DoveActivityChanger(int which, double time) {
         switch (which) {
             case 0:
-                Alvas(time);
+                Sleep(time);
                 break;
             case 2:
-                Tanulas(time);
+                Learning(time);
                 break;
             case 3:
-                Telefonozas(time);
+                GamingOnPhone(time);
                 break;
             case 4:
-                Olvasas(time);
+                Read(time);
                 break;
             case 5:
-                Lazulas(time);
+                Rest(time);
                 break;
             case 6:
-                ZeneHallgatas(time);
+                ListenToMusic(time);
                 break;
             case 7:
-                Dolgozas(time);
+                Work(time);
                 break;
         }
     }
 
-
-    public void KajaVasarlas(String nev) {
-        kajamennyiseg.put(nev, (int) kajamennyiseg.get(nev) + 1);
+    //segédfüggvény double tipusban adja vissza két időpont közt eltelt perceket
+    private double TimeDiffInMinute(DateTime changedTime) {
+        Period p = new Period(activityStartedDate, changedTime);
+        return p.toStandardMinutes().getMinutes() + (((double) p.toStandardSeconds().getSeconds() % 60) / 60);
     }
 
-    public void KajaFogyasztas(String nev) {
-        kajamennyiseg.put(nev, (int) kajamennyiseg.get(nev) - 1);
+    public void BuyFood(String nev) {
+        foodQuantity.put(nev, foodQuantity.get(nev) + 1);
     }
+
+    public void EatFood(String nev) {
+        foodQuantity.put(nev, foodQuantity.get(nev) - 1);
+    }
+    //endregion
 }

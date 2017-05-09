@@ -11,8 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.Serializable;
-import java.util.HashMap;
+
 import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class StoreActivity extends AppCompatActivity {
         LoadFoodsIntoGrodView();
 
         galamb = (Galamb) getIntent().getSerializableExtra("galamb");
-        playerMoneyText.setText(String.valueOf(galamb.getPenz()));
+        playerMoneyText.setText(String.valueOf(galamb.getMoney()));
 
         //Vissza nyílra ugyanazt csinálja mint a rendes vissza gombra
         goBackView.setOnClickListener(new View.OnClickListener() {
@@ -77,11 +76,11 @@ public class StoreActivity extends AppCompatActivity {
 
     public void BuySelected(Food selected) {
         if (selected != null) {
-            if (galamb.getPenz() >= selected.getCost())
+            if (galamb.getMoney() >= selected.getCost())
             {
-                galamb.KajaVasarlas(selected.getName());
-                galamb.setPenz(-selected.getCost());
-                playerMoneyText.setText(String.valueOf(galamb.getPenz()));
+                galamb.BuyFood(selected.getName());
+                galamb.setMoney(-selected.getCost());
+                playerMoneyText.setText(String.valueOf(galamb.getMoney()));
                 Toast toast =  Toast.makeText(this,"Sikeres vásárlás!",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,70);
                 toast.show();
@@ -148,7 +147,7 @@ public class StoreActivity extends AppCompatActivity {
     private void UpdateSelectedDetails(Food selected) {
         if (selected != null) {
                 String s = selected.getName() + "\t\t" + "Ára: " + String.valueOf(selected.getCost())
-                        + "\n" + "Mennyiség: " + String.valueOf((int) galamb.getKajamennyiseg().get(selected.getName()))
+                        + "\n" + "Mennyiség: " + String.valueOf((int) galamb.getFoodQuantity().get(selected.getName()))
                         + "\t\t" + "Tápanyagtartalom: " + String.valueOf(selected.getNutrient());
                 detailsTextview.setText(s);
         }

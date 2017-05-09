@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import org.joda.time.Period;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,13 @@ public class StepCounterLogAvtivity extends AppCompatActivity {
         Button clearButton = (Button)findViewById(R.id.clearButton);
 
         minutesandstepslist= (List<StepCounterLog>) getIntent().getSerializableExtra("StepCountList");
+        if (minutesandstepslist==null)
+        {
+            minutesandstepslist = new ArrayList<StepCounterLog>();
+        }
+//        minutesandstepslist.add(new StepCounterLog(5000,new Period(25,6,8,4))); TESZT
+//        minutesandstepslist.add(new StepCounterLog(2656,new Period(22,6,8,4)));
+//        minutesandstepslist.add(new StepCounterLog(333,new Period(0,0,8,4)));
         final StepCounterLogAdapter adapter = new StepCounterLogAdapter(minutesandstepslist);
         final GridView MinutesandStepGrid = (GridView)findViewById(R.id.timeAndSteps);
         MinutesandStepGrid.setAdapter(adapter);

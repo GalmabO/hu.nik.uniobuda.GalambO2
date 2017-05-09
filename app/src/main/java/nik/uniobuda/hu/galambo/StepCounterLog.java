@@ -1,5 +1,13 @@
 package nik.uniobuda.hu.galambo;
 
+import org.joda.time.Duration;
+import org.joda.time.MonthDay;
+import org.joda.time.Months;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.joda.time.format.PeriodPrinter;
+
 import java.io.Serializable;
 
 /**
@@ -8,15 +16,17 @@ import java.io.Serializable;
 
 public class StepCounterLog implements Serializable {
     int stepCount;
-    int minutes;
-    int hours;
-    int seconds;
+    Period p;
 
-    public StepCounterLog(int stepCount, int hours, int minutes,int seconds) {
+    //Gsonnak?
+    public StepCounterLog()
+    {
+        p = new Period();
+    }
+
+    public StepCounterLog(int stepCount, Period p) {
         this.stepCount = stepCount;
-        this.minutes = minutes;
-        this.hours = hours;
-        this.seconds = seconds;
+       this.p = p;
     }
 
     public int getStepCount() {
@@ -26,17 +36,24 @@ public class StepCounterLog implements Serializable {
 
     public String getTimeInFormat()
     {
+String s = p.toString(new PeriodFormatterBuilder()
+        .minimumPrintedDigits(2)
+        .printZeroAlways()
+        .appendHours()
+        .appendSeparator(":")
+        .appendMinutes()
+        .appendSeparator(":")
+        .appendSeconds()
+        .toFormatter());
+        return  s;
+//                ((hours)>9?String.valueOf(hours):"0"+String.valueOf(hours))+":"
+//                +((minutes)>9?String.valueOf(minutes):"0"+String.valueOf(minutes))+":"
+//                +((seconds)>9?String.valueOf(seconds):"0"+String.valueOf(seconds));
 
-        return ((hours)>9?String.valueOf(hours):"0"+String.valueOf(hours))+":"
-                +((minutes)>9?String.valueOf(minutes):"0"+String.valueOf(minutes))+":"
-                +((seconds)>9?String.valueOf(seconds):"0"+String.valueOf(seconds));
     }
 
     public void setStepCount(int stepCount) {
         this.stepCount = stepCount;
     }
 
-    public double getMinutes() {
-        return minutes;
-    }
 }
