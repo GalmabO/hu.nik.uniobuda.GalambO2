@@ -213,6 +213,7 @@ public class Galamb implements Serializable  {
         jollakottsag -= time / 400 + step / 500;
         egeszseg += (time * 0.2) / 400 + step / 500;
 
+        activityStartedDate = changedTime;
         this.addPreviousSteps(new StepCounterLog(step, p.getHours(),p.getMinutes(),p.getSeconds()));
     }
 
@@ -279,10 +280,6 @@ public class Galamb implements Serializable  {
 
         Period p = new Period(activityStartedDate,changedTime);
         long time = p.getSeconds()/60;
-
-//        long diffInMs = changedTime.getTime() - activityStartedDate;
-//        long powerOfChangedTime = diffInMs / (60 * 1000) % 60;
-        //ez lesz az az érték ami meghatározza hogy milyen szintán változnak az egyes propertyk értékei.
 
         DoveActivityChanger(activityID, time);
 

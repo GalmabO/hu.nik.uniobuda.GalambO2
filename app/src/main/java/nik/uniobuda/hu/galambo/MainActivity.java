@@ -107,8 +107,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                TevekenysegValtas(galamb.getMitcsinal());
-                SvipehezBeallitas();
+                if(galamb.getMitcsinal() != 1) // ha nem mozog
+                {
+                    TevekenysegValtas(galamb.getMitcsinal());
+                    SvipehezBeallitas();
+                }
+
             }
 
             @Override
@@ -253,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             stepcounterIsRunning = false;
             galamb.DoveActivityChange(TevekenysegID, DateTime.now());
         }
-        galamb.setMitcsinal(TevekenysegID);galamb.DoveActivityChange(TevekenysegID, DateTime.now());
+        galamb.setMitcsinal(TevekenysegID);
         KepValtas();
     }
 
