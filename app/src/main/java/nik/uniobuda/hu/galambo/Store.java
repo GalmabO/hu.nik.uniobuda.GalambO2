@@ -1,5 +1,7 @@
 package nik.uniobuda.hu.galambo;
 
+import android.util.SparseIntArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,9 @@ import java.util.List;
 public abstract class Store {
     //A bolt árukészletét jelentő tömböt tölti fel ami nem változik futási időben.
     private static List<Food> foods;
+    //Ezt is ide ne kelljen a minben mindig inicializálni
+    //mintha hashmap lenne csak optimálisabb
+    private static SparseIntArray ImagesToActivities;
 
     static {
         foods = new ArrayList<>();
@@ -31,9 +36,23 @@ public abstract class Store {
         foods.add(new Food("Sültkrumpli", 3, 20, (R.drawable.sultkrumli)));
         foods.add(new Food("Torta", 4, 15, (R.drawable.torra)));
         foods.add(new Food("Pizza", 5, 25, (R.drawable.pizza)));
+
+        ImagesToActivities = new SparseIntArray();
+        ImagesToActivities.put(0, R.drawable.alszik);
+        ImagesToActivities.put(1, R.drawable.sportol);
+        ImagesToActivities.put(2, R.drawable.tanul);
+        ImagesToActivities.put(3, R.drawable.telefonozik);
+        ImagesToActivities.put(4, R.drawable.olvas);
+        ImagesToActivities.put(5, R.drawable.lazul);
+        ImagesToActivities.put(6, R.drawable.zenethallgat);
+        ImagesToActivities.put(7, R.drawable.dolgozas);
     }
 
     public static List<Food> getFoods() {
         return foods;
+    }
+
+    public static SparseIntArray getImagesToActivities() {
+        return ImagesToActivities;
     }
 }

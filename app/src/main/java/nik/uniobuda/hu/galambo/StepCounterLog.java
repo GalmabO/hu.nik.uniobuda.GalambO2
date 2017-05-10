@@ -18,38 +18,31 @@ public class StepCounterLog implements Serializable {
     int stepCount;
     Period p;
 
-    //Gsonnak?
-    public StepCounterLog()
-    {
+    //Gsonnak??
+    public StepCounterLog() {
         p = new Period();
     }
 
     public StepCounterLog(int stepCount, Period p) {
         this.stepCount = stepCount;
-       this.p = p;
+        this.p = p;
     }
 
     public int getStepCount() {
-
         return stepCount;
     }
 
-    public String getTimeInFormat()
-    {
-String s = p.toString(new PeriodFormatterBuilder()
-        .minimumPrintedDigits(2)
-        .printZeroAlways()
-        .appendHours()
-        .appendSeparator(":")
-        .appendMinutes()
-        .appendSeparator(":")
-        .appendSeconds()
-        .toFormatter());
-        return  s;
-//                ((hours)>9?String.valueOf(hours):"0"+String.valueOf(hours))+":"
-//                +((minutes)>9?String.valueOf(minutes):"0"+String.valueOf(minutes))+":"
-//                +((seconds)>9?String.valueOf(seconds):"0"+String.valueOf(seconds));
-
+    public String getTimeInFormat() {
+        String s = p.toString(new PeriodFormatterBuilder()
+                .minimumPrintedDigits(2)
+                .printZeroAlways()
+                .appendHours()
+                .appendSeparator(":")
+                .appendMinutes()
+                .appendSeparator(":")
+                .appendSeconds()
+                .toFormatter());
+        return s;
     }
 
     public void setStepCount(int stepCount) {

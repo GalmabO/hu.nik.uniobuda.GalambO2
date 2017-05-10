@@ -41,6 +41,7 @@ public class Galamb implements Serializable {
     private int money;
     private DateTime activityStartedDate;
     private DateTime trueStartedDate;
+    private double sumSalary;
 
     public int actualStep;
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik
@@ -151,6 +152,7 @@ public class Galamb implements Serializable {
         previousSteps = new ArrayList<>();
         foodQuantityInit();
         actualStep = 0;
+        sumSalary = 0;
     }
     //endregion
 
@@ -255,16 +257,20 @@ public class Galamb implements Serializable {
         satiety -= (time) / TIMECORRETION;
     }
 
-    public void Work(double time, Context context) {
+    public void Work(double time, Context context, Boolean isJustRefresh) {
         mood -= (time * 0.5) / TIMECORRETION;
         relaxed -= (time * 0.5) / TIMECORRETION;
         fitness -= (time * 0.5) / TIMECORRETION;
         health -= (time * 0.1) / TIMECORRETION;
         intelligence -= (time * 0.05) / TIMECORRETION;
         satiety -= (time) / TIMECORRETION;
-        double salary = time * 100;
-        money += (salary);
-        Toast.makeText(context, salary + " dollárt kerestél!", Toast.LENGTH_SHORT).show();
+        sumSalary += time * 120;
+        if (!isJustRefresh)
+        {
+            money += (sumSalary);
+            Toast.makeText(context, (int) sumSalary + " dollárt kerestél!", Toast.LENGTH_SHORT).show();
+            sumSalary = 0;
+        }
     }
 
     public void Eat(int nutritionOfChangedFood) {
@@ -274,17 +280,17 @@ public class Galamb implements Serializable {
         satiety += nutritionOfChangedFood;
     }
 
-    public void DoveActivityChange(DateTime changedTime, Context contetxt) {
+    public void DoveActivityChange(DateTime changedTime, Context contetxt, Boolean isJustRefresh) {
 
         double time = TimeDiffInMinute(changedTime);
-        DoveActivityChanger(time, contetxt);
+        DoveActivityChanger(time, contetxt, isJustRefresh);
         //új aktivitást kezdtünk
         activityStartedDate = changedTime;
     }
 
     //Aktivitás hatásának szimulálása, bemenet az eltelt idő
     // (a mozgás külön van kezelve a mainactivityből)
-    private void DoveActivityChanger(double time, Context context) {
+    private void DoveActivityChanger(double time, Context context, Boolean isJustRefresh) {
         switch (currentActivity) {
             case 0:
                 Sleep(time);
@@ -305,7 +311,7 @@ public class Galamb implements Serializable {
                 ListenToMusic(time);
                 break;
             case 7:
-                Work(time, context);
+                Work(time, context, isJustRefresh);
                 break;
         }
     }

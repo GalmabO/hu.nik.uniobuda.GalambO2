@@ -41,7 +41,6 @@ public class FoodAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //TODO újrahasznosítás
         ViewHolderFoodAdapter holder;
 
 

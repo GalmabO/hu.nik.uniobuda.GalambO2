@@ -43,13 +43,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private Galamb galamb;
     private final String FILENAME = "DoveInstance";
-    private final String FILENAME_DATE = "date";
     SparseIntArray ImagesToActivities;
 
     //Felület:
-    TextView kivalasztottkajaText;
+    TextView selectedFoodTextview;
     ImageView FoodImageView;
-    ImageView galambKep;
+    ImageView doveImage;
     TextView stepTextview;
 
     // következők a swipe-barhoz tartozó cuccok
@@ -71,32 +70,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_ver2);
 
+        //swipe
         mTitle = mDrawerTitle = getTitle();
         mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
         //header
         View header = getLayoutInflater().inflate(R.layout.list_header, null);
         mDrawerList.addHeaderView(header);
 
-        loadImagesToActivities();
-
         //Felület elemeinek elérése
-        kivalasztottkajaText = (TextView) findViewById(R.id.selecetedFoodTextview);
+        selectedFoodTextview = (TextView) findViewById(R.id.selecetedFoodTextview);
         FoodImageView = (ImageView) findViewById(R.id.FoodImageview);
-        galambKep = (ImageView) findViewById(R.id.galambImageView);
+        doveImage = (ImageView) findViewById(R.id.galambImageView);
         stepTextview = (TextView) findViewById(R.id.stepsTextview);
-        galambKep.setClickable(true);
+        doveImage.setClickable(true);
+        ImagesToActivities = Store.getImagesToActivities();
 
         //képre toutcholva etetünk
-        galambKep.setOnClickListener(new View.OnClickListener() {
+        doveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EatSomeFood();
             }
         });
 
+        //swipe frissít mikor elhúzzuk
         setupToolbar();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -105,12 +104,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onDrawerOpened(View drawerView) {
-//                if(galamb.getCurrentActivity() != 1) // ha nem mozog KÓKÁNY
-//                {
-                TevekenysegValtas(galamb.getCurrentActivity(), true);
+                ActivityChange(galamb.getCurrentActivity(), true);
                 SvipehezBeallitas();
-//                }
-
             }
 
             @Override
@@ -152,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         //endregion
 
+        //ha ment a szenzor mikor végetért ac activity menjen mostis (elforgaatásnál)
+        //akkor ment ha nemvolt nullázva az actualstep
         if (galamb.getActualStep() > 0) {
             stepcounterIsRunning = true;
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -163,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boltgomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BoltActivityMegnyitas();
+                OpenStoreActivity();
             }
         });
 
@@ -183,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-
         Button OpenStepCounterLogActivitygomb = (Button) findViewById(R.id.OpenStepCounterLogActivity);
         OpenStepCounterLogActivitygomb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,26 +189,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-
-    private void loadImagesToActivities() {
-        //mintha hashmap lenne csak optimálisabb
-        ImagesToActivities = new SparseIntArray();
-        ImagesToActivities.put(0, R.drawable.alszik);
-        ImagesToActivities.put(1, R.drawable.sportol);
-        ImagesToActivities.put(2, R.drawable.tanul);
-        ImagesToActivities.put(3, R.drawable.telefonozik);
-        ImagesToActivities.put(4, R.drawable.olvas);
-        ImagesToActivities.put(5, R.drawable.lazul);
-        ImagesToActivities.put(6, R.drawable.zenethallgat);
-        ImagesToActivities.put(7, R.drawable.dolgozas);
-    }
-
     private void OpenStepCounterLogActivitySelect() {
         Intent intent = new Intent(MainActivity.this, StepCounterLogAvtivity.class);
         intent.putExtra("StepCountList", (Serializable) galamb.getPreviousSteps());
         this.startActivityForResult(intent, 2);
     }
-
 
     private void TevekenysegDialog() {
         final CharSequence[] activities = new CharSequence[Galamb.ezeketcsinalhatja.length];
@@ -225,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(DialogInterface dialog, int item) {
                 TextView tevekenysegTextView = (TextView) findViewById(R.id.selectActivity);
                 if (item >= 0) {
-                    TevekenysegValtas(item, false);
+                    ActivityChange(item, false);
                 }
                 tevekenysegTextView.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getCurrentActivity()]);
                 dialog.dismiss();
@@ -235,13 +216,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alert.show();
     }
 
-
-    private void TevekenysegValtas(int TevekenysegID, Boolean isJustRefresh) {
-        if (galamb.getCurrentActivity() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
+    private void ActivityChange(int TevekenysegID, Boolean isJustRefresh) {
+        if (galamb.getCurrentActivity() == 1)
+        //itt még nincs átállítva a tevékenyésg a kiválasztottra,
+        // ezért ha eddig a "mozgáson" volt akkor belép
         {
             galamb.Move(DateTime.now(), galamb.getActualStep(), isJustRefresh);
             if (!isJustRefresh) {
                 galamb.setActualStep(0);
+                //ne menjenek ah nem kell
                 stepcounterIsRunning = false;
                 sensorManager = null;
                 countSensor = null;
@@ -249,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
 
+        //mozgást külön kezeljük
         if (TevekenysegID == 1) { //mozgás
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -265,18 +249,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 galamb.setActivityStartedDate(DateTime.now());
             }
         } else {
-            galamb.DoveActivityChange(DateTime.now(), getApplicationContext());
+            //többit együtt kezeljük
+            galamb.DoveActivityChange(DateTime.now(), getApplicationContext(), isJustRefresh);
         }
-
         galamb.setCurrentActivity(TevekenysegID);
-        KepValtas();
+        ChangeImage();
     }
 
     private void KajaDialog() {
         List<String> seged = new ArrayList<>();
         for (int i = 0; i < Store.getFoods().size(); i++) {
             if ((int) galamb.getFoodQuantity().get(Store.getFoods().get(i).getName()) != 0)
-            // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki. Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
+            // megnézi hogy a galamb kajadictionaryjében az adott kajából van-e neki.
+            // Erre a store cikkek nevét használja kulcsnak. (Mindkét helyen ugyanazok a kaják szerepelnek.)
             {
                 seged.add(Store.getFoods().get(i).getName() +
                         " (" + galamb.getFoodQuantity().get(Store.getFoods().get(i).getName()) + ")");
@@ -287,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         for (int i = 0; i < seged.size(); i++) {
             kajaradio[i] = seged.get(i);
         }
-
 
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
         alt_bld.setTitle("Étel kiválasztás");
@@ -304,18 +288,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (galamb.getSelectedFood() != -1) {
                     SelectedFoodShow();
                 }
-
                 dialog.dismiss();
-
             }
         });
         AlertDialog alert = alt_bld.create();
         alert.show();
-
-
     }
 
-    private void BoltActivityMegnyitas() {
+    private void OpenStoreActivity() {
         Intent intent = new Intent(MainActivity.this, StoreActivity.class);
         intent.putExtra("galamb", galamb);
         this.startActivityForResult(intent, 1);
@@ -324,13 +304,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //store eredménye
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 galamb = (Galamb) data.getSerializableExtra("galamb");
-//                galamb.setKajamennyiseg(((Galamb)data.getSerializableExtra("galamb")).getFoodQuantity());
                 SaveToStorage();
             }
+            //lépésszámláló ablak eredméyne
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 galamb.setPreviousSteps((List<StepCounterLog>) data.getSerializableExtra("lista"));
@@ -346,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getSupportActionBar().setHomeButtonEnabled(true);
         TextView actualActivity = (TextView) findViewById(R.id.selectActivity);
         actualActivity.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getCurrentActivity()]);
-        KepValtas();
+        ChangeImage();
         SelectedFoodShow();
         PropertyAdapter adapter = ListaFeltoltesEsAdapterreKonvertalas();
         ListView listView = (ListView) findViewById(R.id.left_drawer);
@@ -357,21 +337,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Kiválasztott étel megjelenítése
     void SelectedFoodShow() {
         if (0 <= galamb.getSelectedFood() && galamb.getSelectedFood() <= Store.getFoods().size()) {
-
             String nameOfFood = Store.getFoods().get(galamb.getSelectedFood()).getName();
             String amountOfFood = galamb.getFoodQuantity().get(nameOfFood).toString();
             String s = "Kiváálasztott étel: " + nameOfFood + " (" + amountOfFood + ")";
-            kivalasztottkajaText.setText(s);
+            selectedFoodTextview.setText(s);
             FoodImageView.setImageResource(Store.getFoods().get(galamb.getSelectedFood()).getImageID());
         } else {
-            kivalasztottkajaText.setText("Nincs kiválasztva étel!");
+            selectedFoodTextview.setText("Nincs kiválasztva étel!");
             FoodImageView.setImageDrawable(null);
         }
     }
 
-    private void KepValtas() {
+    private void ChangeImage() {
         galamb.setImageID(ImagesToActivities.get(galamb.getCurrentActivity()));
-        galambKep.setImageResource(galamb.getImageID());
+        doveImage.setImageResource(galamb.getImageID());
     }
 
     private void EatSomeFood() {
@@ -394,8 +373,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private PropertyAdapter ListaFeltoltesEsAdapterreKonvertalas() {
         List<ListItemDataModel> drawerItem = new ArrayList<>(Galamb.NUMOFPROPERTIES);
-
-
         for (int i = 0; i < Galamb.NUMOFPROPERTIES; i++) {
             double thisValue = 0;
 
@@ -426,7 +403,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setupDrawerToggle();
-
         mDrawerLayout.post(new Runnable() {
 
             @Override
@@ -444,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         try {
             fos = openFileOutput(FILENAME, MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
-//            Gson gson = new Gson();
+        //  Gson gson = new Gson(); // a másik tudja a yodát is
             Gson gson = Converters.registerAll(new GsonBuilder()).create();
             String str = gson.toJson(galamb);
             oos.writeObject(str);
@@ -496,13 +472,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main_ver2);
     }
 
+    //SWIPE
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

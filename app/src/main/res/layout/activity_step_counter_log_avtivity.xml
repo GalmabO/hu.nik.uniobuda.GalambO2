@@ -7,16 +7,30 @@
     tools:context="nik.uniobuda.hu.galambo.StepCounterLogAvtivity"
     android:background="@color/Purple_medium">
 
-<android.support.v7.widget.AppCompatTextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Előző tevékenységek:"
-    android:gravity="center"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:id="@+id/header"
-    android:textColor="@color/sand"
-    android:layout_margin="8dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Előző tevékenységek:"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:id="@+id/header"
+            android:textColor="@color/sand"
+            android:layout_margin="16dp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:id="@+id/arrowMirroredImageview"
+            android:src="@drawable/arrow_mirrored"
+            />
+
+    </RelativeLayout>
 
     <GridView
         android:id="@+id/timeAndSteps"
