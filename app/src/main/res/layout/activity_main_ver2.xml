@@ -55,10 +55,9 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/galambLevelTextview"
-            android:text="Szint"
+            android:id="@+id/stepsTextview"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@color/sand"/>
 
         <android.support.v7.widget.AppCompatImageView

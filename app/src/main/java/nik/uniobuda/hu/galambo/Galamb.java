@@ -1,5 +1,8 @@
 package nik.uniobuda.hu.galambo;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
@@ -38,6 +41,8 @@ public class Galamb implements Serializable {
     private int money;
     private DateTime activityStartedDate;
     private DateTime trueStartedDate;
+
+    public int actualStep;
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik
     // (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
     private HashMap<String, Integer> foodQuantity;
@@ -119,6 +124,14 @@ public class Galamb implements Serializable {
     public void setCurrentActivity(int currentActivity) {
         this.currentActivity = currentActivity;
     }
+
+    public int getActualStep() {
+        return actualStep;
+    }
+
+    public void setActualStep(int actualStep) {
+        this.actualStep = actualStep;
+    }
 //endregion
 
     //region constructor
@@ -137,6 +150,7 @@ public class Galamb implements Serializable {
         foodQuantity = new HashMap();
         previousSteps = new ArrayList<>();
         foodQuantityInit();
+        actualStep = 0;
     }
     //endregion
 
@@ -183,7 +197,7 @@ public class Galamb implements Serializable {
             trueStartedDate = activityStartedDate;
         }
         double time = TimeDiffInMinute(changedTime);
-        fitness += (time * 10000.5) / 400 + step / 500;
+        fitness += (time * 1.5) / 400 + step / 500;
         relaxed -= (time * 0.5) / 400 + step / 500;
         mood += (time * 0.5) / 400 + step / 500;
         satiety -= time / 400 + step / 500;
@@ -241,14 +255,16 @@ public class Galamb implements Serializable {
         satiety -= (time) / TIMECORRETION;
     }
 
-    public void Work(double time) {
+    public void Work(double time, Context context) {
         mood -= (time * 0.5) / TIMECORRETION;
         relaxed -= (time * 0.5) / TIMECORRETION;
         fitness -= (time * 0.5) / TIMECORRETION;
         health -= (time * 0.1) / TIMECORRETION;
         intelligence -= (time * 0.05) / TIMECORRETION;
         satiety -= (time) / TIMECORRETION;
-        money += (time * 4);
+        double salary = time * 100;
+        money += (salary);
+        Toast.makeText(context, salary + " dollárt kerestél!", Toast.LENGTH_SHORT).show();
     }
 
     public void Eat(int nutritionOfChangedFood) {
@@ -258,18 +274,18 @@ public class Galamb implements Serializable {
         satiety += nutritionOfChangedFood;
     }
 
-    public void DoveActivityChange(int activityID, DateTime changedTime) {
+    public void DoveActivityChange(DateTime changedTime, Context contetxt) {
 
         double time = TimeDiffInMinute(changedTime);
-        DoveActivityChanger(activityID, time);
+        DoveActivityChanger(time, contetxt);
         //új aktivitást kezdtünk
         activityStartedDate = changedTime;
     }
 
     //Aktivitás hatásának szimulálása, bemenet az eltelt idő
     // (a mozgás külön van kezelve a mainactivityből)
-    private void DoveActivityChanger(int which, double time) {
-        switch (which) {
+    private void DoveActivityChanger(double time, Context context) {
+        switch (currentActivity) {
             case 0:
                 Sleep(time);
                 break;
@@ -289,7 +305,7 @@ public class Galamb implements Serializable {
                 ListenToMusic(time);
                 break;
             case 7:
-                Work(time);
+                Work(time, context);
                 break;
         }
     }

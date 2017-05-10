@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -41,7 +42,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private Galamb galamb;
-    private final String FILENAME = "Galamb____Peldany";
+    private final String FILENAME = "DoveInstance";
     private final String FILENAME_DATE = "date";
     SparseIntArray ImagesToActivities;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     TextView kivalasztottkajaText;
     ImageView FoodImageView;
     ImageView galambKep;
+    TextView stepTextview;
 
     // következők a swipe-barhoz tartozó cuccok
     private String[] mNavigationDrawerItemTitles;
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //---stepcounter--
     private SensorManager sensorManager;
     private boolean stepcounterIsRunning;
-    private int step;
     Sensor countSensor;
 
     @Override
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         kivalasztottkajaText = (TextView) findViewById(R.id.selecetedFoodTextview);
         FoodImageView = (ImageView) findViewById(R.id.FoodImageview);
         galambKep = (ImageView) findViewById(R.id.galambImageView);
+        stepTextview = (TextView) findViewById(R.id.stepsTextview);
         galambKep.setClickable(true);
 
         //képre toutcholva etetünk
@@ -105,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onDrawerOpened(View drawerView) {
 //                if(galamb.getCurrentActivity() != 1) // ha nem mozog KÓKÁNY
 //                {
-                    TevekenysegValtas(galamb.getCurrentActivity(),true);
-                    SvipehezBeallitas();
+                TevekenysegValtas(galamb.getCurrentActivity(), true);
+                SvipehezBeallitas();
 //                }
 
             }
@@ -150,6 +152,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         //endregion
 
+        if (galamb.getActualStep() > 0) {
+            stepcounterIsRunning = true;
+            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
+        }
 
         Button boltgomb = (Button) findViewById(R.id.OpenStoreActivity);
         boltgomb.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
 
-
         Button OpenStepCounterLogActivitygomb = (Button) findViewById(R.id.OpenStepCounterLogActivity);
         OpenStepCounterLogActivitygomb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
     }
+
 
     private void loadImagesToActivities() {
         //mintha hashmap lenne csak optimálisabb
@@ -199,11 +207,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ImagesToActivities.put(7, R.drawable.dolgozas);
     }
 
-    private void OpenStepCounterLogActivitySelect()
-    {
+    private void OpenStepCounterLogActivitySelect() {
         Intent intent = new Intent(MainActivity.this, StepCounterLogAvtivity.class);
         intent.putExtra("StepCountList", (Serializable) galamb.getPreviousSteps());
-        this.startActivityForResult(intent,2);
+        this.startActivityForResult(intent, 2);
     }
 
 
@@ -216,11 +223,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alt_bld.setTitle("Tevékenység kiválasztás");
         alt_bld.setSingleChoiceItems(activities, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                Toast.makeText(getApplicationContext(),
-                        "A kiválasztott tevékenység: " + activities[item], Toast.LENGTH_SHORT).show();
                 TextView tevekenysegTextView = (TextView) findViewById(R.id.selectActivity);
                 if (item >= 0) {
-                    TevekenysegValtas(item,false);
+                    TevekenysegValtas(item, false);
                 }
                 tevekenysegTextView.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getCurrentActivity()]);
                 dialog.dismiss();
@@ -230,23 +235,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alert.show();
     }
 
+
     private void TevekenysegValtas(int TevekenysegID, Boolean isJustRefresh) {
         if (galamb.getCurrentActivity() == 1) //itt még nincs átállítva a tevékenyésg a kiválasztottra, ezért ha eddig a "mozgáson" volt akkor belép
         {
-            galamb.Move(DateTime.now(), step,isJustRefresh);
-            if (!isJustRefresh)
-            {
-                step = 0;
+            galamb.Move(DateTime.now(), galamb.getActualStep(), isJustRefresh);
+            if (!isJustRefresh) {
+                galamb.setActualStep(0);
+                stepcounterIsRunning = false;
+                sensorManager = null;
+                countSensor = null;
+                stepTextview.setText("");
             }
         }
 
         if (TevekenysegID == 1) { //mozgás
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            if (!isJustRefresh){
+            if (!isJustRefresh) {
                 if (countSensor != null) {
                     stepcounterIsRunning = true;
-                    step = 0;
+                    galamb.setActualStep(0);
                     sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
                 } else {
                     sensorManager = null;
@@ -255,9 +264,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 galamb.setActivityStartedDate(DateTime.now());
             }
+        } else {
+            galamb.DoveActivityChange(DateTime.now(), getApplicationContext());
         }
-        else
-            galamb.DoveActivityChange(TevekenysegID, DateTime.now());
 
         galamb.setCurrentActivity(TevekenysegID);
         KepValtas();
@@ -322,11 +331,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                galamb.setKajamennyiseg(((Galamb)data.getSerializableExtra("galamb")).getFoodQuantity());
                 SaveToStorage();
             }
-        }
-        else if (requestCode == 2)
-        {
-            if(resultCode == RESULT_OK)
-            {
+        } else if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
                 galamb.setPreviousSteps((List<StepCounterLog>) data.getSerializableExtra("lista"));
                 SaveToStorage();
             }
@@ -484,6 +490,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         LoadFromStorage();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.activity_main_ver2);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -517,7 +528,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (stepcounterIsRunning) {
-            step++;
+            galamb.setActualStep(galamb.getActualStep() + 1);
+            stepTextview.setText("Megtett lépések: " + galamb.getActualStep());
         }
     }
 
