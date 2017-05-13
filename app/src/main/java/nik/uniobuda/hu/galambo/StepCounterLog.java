@@ -1,6 +1,7 @@
 package nik.uniobuda.hu.galambo;
 
 import org.joda.time.Duration;
+import org.joda.time.Minutes;
 import org.joda.time.MonthDay;
 import org.joda.time.Months;
 import org.joda.time.Period;
@@ -9,6 +10,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import org.joda.time.format.PeriodPrinter;
 
 import java.io.Serializable;
+import java.math.RoundingMode;
 
 /**
  * Created by Adam on 2017. 05. 05..
@@ -43,6 +45,13 @@ public class StepCounterLog implements Serializable {
                 .appendSeconds()
                 .toFormatter());
         return s;
+    }
+
+    public String getStepPerMinute()
+    {
+        Minutes min= p.toStandardMinutes();
+        double fullmin = p.getMinutes()+(double)p.getSeconds()/60+p.getHours()*60;
+        return String.valueOf(Math.round((stepCount/fullmin)*100)/100);
     }
 
     public void setStepCount(int stepCount) {

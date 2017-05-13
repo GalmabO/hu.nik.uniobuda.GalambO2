@@ -264,7 +264,7 @@ public class Galamb implements Serializable {
         health -= (time * 0.1) / TIMECORRETION;
         intelligence -= (time * 0.05) / TIMECORRETION;
         satiety -= (time) / TIMECORRETION;
-        sumSalary += time * 120;
+        sumSalary += time * 4;
         if (!isJustRefresh)
         {
             money += (sumSalary);

@@ -24,7 +24,8 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@id/arrowMirroredImageview"
+            android:layout_marginStart="100dp"
             android:layout_centerVertical="true"
             android:text="Bolt"
             android:textColor="@color/sand"
