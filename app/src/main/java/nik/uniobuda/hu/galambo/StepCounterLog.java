@@ -20,7 +20,6 @@ public class StepCounterLog implements Serializable {
     int stepCount;
     Period p;
 
-    //Gsonnak??
     public StepCounterLog() {
         p = new Period();
     }
@@ -35,11 +34,13 @@ public class StepCounterLog implements Serializable {
     }
 
     public String getTimeInFormat() {
-        String s = p.toString(new PeriodFormatterBuilder()
+        String h = String.valueOf (p.getDays()*24+p.getHours()+":"); //ha több napig mozogna akkor hozzáadja
+        //az eltelt napok számának a 24szeresét az órához
+        String s = h + p.toString(new PeriodFormatterBuilder()
                 .minimumPrintedDigits(2)
                 .printZeroAlways()
-                .appendHours()
-                .appendSeparator(":")
+                //.appendHours()
+                //.appendSeparator(":")
                 .appendMinutes()
                 .appendSeparator(":")
                 .appendSeconds()
@@ -50,7 +51,7 @@ public class StepCounterLog implements Serializable {
     public String getStepPerMinute()
     {
         Minutes min= p.toStandardMinutes();
-        double fullmin = p.getMinutes()+(double)p.getSeconds()/60+p.getHours()*60;
+        double fullmin = p.getMinutes()+(double)p.getSeconds()/60+p.getHours()*60+p.getDays()*60*24;
         return String.valueOf(Math.round((stepCount/fullmin)*100)/100);
     }
 

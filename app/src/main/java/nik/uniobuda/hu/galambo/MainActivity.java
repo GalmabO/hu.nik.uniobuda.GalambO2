@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tevekenyseggomb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TevekenysegDialog();
+                ActivityChangerDialog();
             }
         });
 
@@ -195,10 +195,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.startActivityForResult(intent, 2);
     }
 
-    private void TevekenysegDialog() {
-        final CharSequence[] activities = new CharSequence[Galamb.ezeketcsinalhatja.length];
-        for (int i = 0; i < Galamb.ezeketcsinalhatja.length; i++) {
-            activities[i] = Galamb.ezeketcsinalhatja[i];
+    private void ActivityChangerDialog() {
+        final CharSequence[] activities = new CharSequence[Galamb.optionalActivitys.length];
+        for (int i = 0; i < Galamb.optionalActivitys.length; i++) {
+            activities[i] = Galamb.optionalActivitys[i];
         }
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
         alt_bld.setTitle("Tevékenység kiválasztás");
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (item >= 0) {
                     ActivityChange(item, false);
                 }
-                tevekenysegTextView.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getCurrentActivity()]);
+                tevekenysegTextView.setText("Jelenlegi tevékenység: " + galamb.optionalActivitys[galamb.getCurrentActivity()]);
                 dialog.dismiss();
             }
         });
@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void OpenStoreActivity() {
         Intent intent = new Intent(MainActivity.this, StoreActivity.class);
+        //átadjuk a galamb példányt, hogy a storeban közvetlenül tudjuk módosítani az értékeit
         intent.putExtra("galamb", galamb);
         this.startActivityForResult(intent, 1);
     }
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 galamb = (Galamb) data.getSerializableExtra("galamb");
                 SaveToStorage();
             }
-            //lépésszámláló ablak eredméyne
+            //lépésszámlálónapló activity eredméyne
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 galamb.setPreviousSteps((List<StepCounterLog>) data.getSerializableExtra("lista"));
@@ -325,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
         TextView actualActivity = (TextView) findViewById(R.id.selectActivity);
-        actualActivity.setText("Jelenlegi tevékenység: " + galamb.ezeketcsinalhatja[galamb.getCurrentActivity()]);
+        actualActivity.setText("Jelenlegi tevékenység: " + galamb.optionalActivitys[galamb.getCurrentActivity()]);
         ChangeImage();
         SelectedFoodShow();
         PropertyAdapter adapter = ListaFeltoltesEsAdapterreKonvertalas();
@@ -472,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main_ver2);
     }
 
-    //SWIPE
+    //---------------------SWIPE---------------------------------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -496,7 +497,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     void setupDrawerToggle() {
         mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        //This is necessary to change the icon of the Drawer Toggle upon state change.
         mDrawerToggle.syncState();
     }
 

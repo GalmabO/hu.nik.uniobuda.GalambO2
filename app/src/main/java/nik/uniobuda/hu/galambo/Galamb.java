@@ -21,7 +21,7 @@ public class Galamb implements Serializable {
     final int TIMECORRETION = 10;
 
     //Lehetséges tevékenységek
-    static final String[] ezeketcsinalhatja =
+    static final String[] optionalActivitys =
             new String[]{"Alvás", "Mozgás", "Tanulás", "Telefonozás", "Olvasás", "Lazulás", "Zenehallgatás", "Munka"};
     public static final int NUMOFPROPERTIES = 6;
     //endregion
@@ -199,11 +199,11 @@ public class Galamb implements Serializable {
             trueStartedDate = activityStartedDate;
         }
         double time = TimeDiffInMinute(changedTime);
-        fitness += (time * 1.5) / 400 + step / 500;
-        relaxed -= (time * 0.5) / 400 + step / 500;
-        mood += (time * 0.5) / 400 + step / 500;
-        satiety -= time / 400 + step / 500;
-        health += (time * 0.2) / 400 + step / 500;
+        fitness += (time * 1.5) / TIMECORRETION*2 + step / 300;
+        relaxed -= (time * 0.5) / TIMECORRETION*2 + step / 300;
+        mood += (time * 0.5) / TIMECORRETION*2 + step / 300;
+        satiety -= time / TIMECORRETION*2 + step / 300;
+        health += (time * 0.2) / TIMECORRETION*2 + step / 300;
         //Hozzáadás a mozgásnaplóhoz
         if (!isJustRefresh) {
             Period p = trueStartedDate != null ? new Period(trueStartedDate, changedTime)
@@ -218,7 +218,7 @@ public class Galamb implements Serializable {
     public void Learning(double time) {
         intelligence += (time * 2) / TIMECORRETION;
         Random rnd = new Random();
-        mood += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / TIMECORRETION; //random hogy jó-e tanulni
+        mood += (time * (rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)) / TIMECORRETION; //random hogy jó-e tanulni
         fitness -= (time * 0.08) / TIMECORRETION;
         relaxed -= (time * 0.8) / TIMECORRETION;
         satiety -= time / TIMECORRETION;
@@ -228,7 +228,7 @@ public class Galamb implements Serializable {
     public void GamingOnPhone(double time) {
         mood += (time * 1.01) / TIMECORRETION;
         Random rnd = new Random();
-        intelligence += (time * rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2) / TIMECORRETION;
+        intelligence += (time * (rnd.nextInt(3 - 2) + 2 - rnd.nextInt(3 - 2) + 2)) / TIMECORRETION;
         fitness -= (time * 0.08) / TIMECORRETION;
         relaxed -= (time * 0.6) / TIMECORRETION;
         health -= (time * 0.1) / TIMECORRETION;
