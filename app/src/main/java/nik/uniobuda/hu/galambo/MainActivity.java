@@ -42,7 +42,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private Galamb galamb;
-    private final String FILENAME = "DoveInstance";
+    private final String FILENAME = "DoveFile";
     SparseIntArray ImagesToActivities;
 
     //Felület:
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private boolean stepcounterIsRunning;
     Sensor countSensor;
+    boolean isRestored;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        isRestored = false;
         //Tárhelyről betölti, ha ezután null akkor új galambot kell csinálni
         LoadFromStorage();
 
@@ -144,17 +146,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             alert.show();
         } else {
             LoadLayoutElementsOnStart();
+
+            if (galamb.getActualStep() > 0) {
+                stepcounterIsRunning = true;
+                sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+                sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
+            }
         }
         //endregion
 
         //ha ment a szenzor mikor végetért ac activity menjen mostis (elforgaatásnál)
         //akkor ment ha nemvolt nullázva az actualstep
-        if (galamb.getActualStep() > 0) {
-            stepcounterIsRunning = true;
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            sensorManager.registerListener(MainActivity.this, countSensor, SensorManager.SENSOR_DELAY_UI);
-        }
+
 
         Button boltgomb = (Button) findViewById(R.id.OpenStoreActivity);
         boltgomb.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //itt még nincs átállítva a tevékenyésg a kiválasztottra,
         // ezért ha eddig a "mozgáson" volt akkor belép
         {
+            isRestored = false;
             galamb.Move(DateTime.now(), galamb.getActualStep(), isJustRefresh);
             if (!isJustRefresh) {
                 galamb.setActualStep(0);
@@ -446,6 +451,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 galamb = test;
             ois.close();
             fis.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -465,6 +471,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         LoadFromStorage();
+
     }
 
     @Override
@@ -504,7 +511,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (stepcounterIsRunning) {
+            if(!isRestored)
+            {
+                int seged = (int)event.values[0] - (int)galamb.getStepcounterResultWhenOnPause();
+                galamb.setActualStep( galamb.getActualStep()+ seged);
+                isRestored=true;
+            }
             galamb.setActualStep(galamb.getActualStep() + 1);
+            galamb.setStepcounterResultWhenOnPause((int)event.values[0]);
+
             stepTextview.setText("Megtett lépések: " + galamb.getActualStep());
         }
     }

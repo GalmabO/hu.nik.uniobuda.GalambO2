@@ -42,8 +42,12 @@ public class Galamb implements Serializable {
     private DateTime activityStartedDate;
     private DateTime trueStartedDate;
     private double sumSalary;
+    private long stepcounterResultWhenOnPause;
+
+
 
     public int actualStep;
+
     //ugyanannyi elemből áll mint ahány kaja van a storeban, a key megegygezik
     // (kaja megnevezése), viszont itt a value, értéke az hogy az adott kajából mennyi van éppen megvásárolva.
     private HashMap<String, Integer> foodQuantity;
@@ -133,6 +137,14 @@ public class Galamb implements Serializable {
     public void setActualStep(int actualStep) {
         this.actualStep = actualStep;
     }
+
+    public long getStepcounterResultWhenOnPause() {
+        return stepcounterResultWhenOnPause;
+    }
+
+    public void setStepcounterResultWhenOnPause(long stepcounterResultWhenOnPause) {
+        this.stepcounterResultWhenOnPause = stepcounterResultWhenOnPause;
+    }
 //endregion
 
     //region constructor
@@ -153,6 +165,7 @@ public class Galamb implements Serializable {
         foodQuantityInit();
         actualStep = 0;
         sumSalary = 0;
+        stepcounterResultWhenOnPause = 0;
     }
     //endregion
 
