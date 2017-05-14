@@ -42,7 +42,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private Galamb galamb;
-    private final String FILENAME = "DoveFile";
+    private final String FILENAME = "Dove_File";
     SparseIntArray ImagesToActivities;
 
     //Felület:
@@ -511,6 +511,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (stepcounterIsRunning) {
+            if(galamb.getStepcounterResultWhenOnPause() == 0)
+            {
+                galamb.setStepcounterResultWhenOnPause((int)event.values[0]);
+            }
             if(!isRestored)
             {
                 int seged = (int)event.values[0] - (int)galamb.getStepcounterResultWhenOnPause();
